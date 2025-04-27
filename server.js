@@ -1,18 +1,18 @@
 import express from 'express'
-import auth from './src/routes/auth.js'
-import logs from './src/routes/logs.js'
-import roles from './src/routes/roles.js'
-import users from './src/routes/users.js'
+import errorHandler from './src/webapi/middlewares/errorHandlerMiddleware.js'
+
+import authController from './src/webapi/controllers/authController.js'
+import logController from './src/webapi/controllers/logController.js'
+import roleController from './src/webapi/controllers/roleController.js'
+import userController from './src/webapi/controllers/userController.js'
 
 const app = express()
-
 app.use(express.json())
 
-app.use('/auth', auth)
-app.use('/logs', logs)
-app.use('/roles', roles)
-app.use('/users', users)
+app.use('/auth', authController)
+app.use('/logs', logController)
+app.use('/roles', roleController)
+app.use('/users', userController)
 
-app.listen(3000, () => {
-    console.log(`running`)
-})
+app.use(errorHandler)
+app.listen(3000, () => console.log(`running`))
