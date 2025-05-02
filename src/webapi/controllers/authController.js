@@ -1,27 +1,41 @@
 import express from 'express'
+
+import authMiddleware from '../middlewares/authMiddleware.js'
 import validatorMiddleware from '../middlewares/validatorMiddleware.js'
 
-import RegisterUserCommand from '../../usecases/auth/registerUser/registerUserCommand.js'
-import registerUserHandler from '../../usecases/auth/registerUser/registerUserHandler.js'
-import registerUserValidator from '../../usecases/auth/registerUser/registerUserValidator.js'
+import Steps from '../../domain/auth/steps.js'
+
+import RegisterUserCommand from '../../application/usecases/auth/registerUser/registerUserCommand.js'
+import registerUserValidator from '../../application/usecases/auth/registerUser/registerUserValidator.js'
+import ConfirmUserEmailCommand from '../../application/usecases/auth/confirmUserEmail/confirmUserEmailCommand.js'
+import confirmUserEmailValidator from '../../application/usecases/auth/confirmUserEmail/confirmUserEmailValidator.js'
 
 const router = express.Router()
 
 router.post('/register',
     validatorMiddleware(RegisterUserCommand, registerUserValidator),
     async (req, res, next) => {
-        const response = await registerUserHandler(req.command)
-        res.status(201).send(response)
+
+        const response = await req.container
+            .resolve('registerUserHandler')
+            .handle(req.command)
+
+        return res.status(200).send(response)
     }
 )
 
-// router.post('/email/validate',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+router.post('/email/validate',
+    authMiddleware({ step: Steps.EMAIL_VERIFICATION }),
+    validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator),
+    async (req, res, next) => {
+        
+        const response = await req.container
+            .resolve('confirmUserEmailHandler')
+            .handle(req.command)
+
+        return res.status(201).send(response)
+    }
+)
 
 // router.post('/login',
 //     validatorMiddleware(RegisterUserCommand, registerUserValidator),

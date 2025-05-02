@@ -4,10 +4,10 @@ export default async (err, req, res, next) => {
     err.statusCode ||= 500
     err.message ||= 'Erro interno no servidor.'
 
-    res.status(statusCode).json({
+    res.status(err.statusCode).json({
         error: {
             ...err.details,
-            message,
+            message: err.message,
             ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
         }
     })

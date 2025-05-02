@@ -1,4 +1,5 @@
 import { body } from 'express-validator'
+import passwordValidator from '../../../validators/passwordValidator.js'
 
 export default [
     body('name')
@@ -9,7 +10,5 @@ export default [
         .isEmail()
         .withMessage('E-mail inválido'),
 
-    body('password')
-        .isLength({ min: 8 })
-        .withMessage('Senha deve ter no mínimo 8 caracteres'),
+    passwordValidator('password')
 ]
