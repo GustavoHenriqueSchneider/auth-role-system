@@ -3,7 +3,7 @@ export default class EmailTemplate {
   static PASSWORD_RESET = 'password-reset'
   static WELCOME = 'welcome'
 
-  static _templates = {
+  static #templates = {
     'email-verification': ({code}) => ({
       subject: 'Confirmação de E-mail',
       html: `
@@ -27,7 +27,7 @@ export default class EmailTemplate {
     })
   }
 
-  static isValidTemplate = templateType => this._templates[templateType] !== undefined
+  static isValidTemplate = templateType => this.#templates[templateType] !== undefined
 
-  static getTemplate = templateType => this.isValidTemplate(templateType) ? this._templates[templateType] : null
+  static getTemplate = templateType => this.isValidTemplate(templateType) ? this.#templates[templateType] : null
 }

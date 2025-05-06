@@ -1,5 +1,6 @@
 import { asClass, asValue } from 'awilix'
 
+import knexClient from './clients/knexClient.js'
 import redisClient from './clients/redisClient.js'
 import smtpClient from './clients/smtpClient.js'
 
@@ -12,6 +13,7 @@ import RedisService from './services/redisService.js'
 
 const registerClients = container => {
   container.register({
+    knexClient: asValue(knexClient),
     redisClient: asValue(redisClient),
     smtpClient: asValue(smtpClient)
   })

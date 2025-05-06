@@ -10,8 +10,24 @@ services:
     networks:
       - backend
 
+  postgres:
+    image: postgres:15
+    container_name: postgres-container
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
 volumes:
   redis-data:
+  postgres-data:
 
 networks:
   backend:

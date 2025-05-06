@@ -1,31 +1,45 @@
 export default class UserRepository {
-    constructor({ knexClient }) {
-      this._knexClient = knexClient
-    }
-  
-    createUser = async (user) => {
-      return await this._knexClient('users').insert(user)
-    }
+  #knexClient
 
-    getUserById = async () => {
-        return await this._knexClient('users').where({ email }).sin()
-    }
-  
-    existsByEmail = async (email) => {
-      const result = await this._knexClient('users')
-        .where({ email })
-        .count('id as count')
-        .first()
-  
-      return Number(result.count) > 0
-    }
-  
-    deleteUserById = async (email) => {
-      return await this._knexClient('users').where({ email }).del()
-    }
-  
-    updatePasswordById = async (userId, newPassword) => {
-      return await this._knexClient('users').where({ id: userId }).update({ password: newPassword })
-    }
+  constructor({ knexClient }) {
+    this.#knexClient = knexClient
   }
-  
+
+  #getDatabase = () => this.#knexClient('users')
+
+  createUser = async user => {
+    const userDto = user.toDatabaseObject()
+
+    const [result] = await this.#getDatabase()
+      .insert(userDto)
+      .returning('id')
+
+    return result.id
+  }
+
+  getUserById = async userId => {
+    return await this.#getDatabase()
+      .where({ id: userId })
+      .first()
+  }
+
+  existsByEmail = async email => {
+    const [{ count }] = await this.#getDatabase()
+      .where({ email })
+      .count()
+
+    return Number(count) > 0
+  }
+
+  deleteUserById = async userId => {
+    return await this.#getDatabase()
+      .where({ id: userId })
+      .del()
+  }
+
+  updateUserById = async (userId, user) => {
+    return await this.#getDatabase()
+      .where({ id: userId })
+      .update(user)
+  }
+}

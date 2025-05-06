@@ -1,11 +1,13 @@
 export default class RedisService {
+  #redisClient
+
   constructor({ redisClient }) {
-    this._redisClient = redisClient
+    this.#redisClient = redisClient
   }
 
   setData = async (key, value, { expiration = 3600 } = {}) => {
     try {
-      await this._redisClient.setEx(key, expiration, JSON.stringify(value))
+      await this.#redisClient.setEx(key, expiration, JSON.stringify(value))
 
     } catch (error) {
 
@@ -16,7 +18,7 @@ export default class RedisService {
 
   getData = async key => {
     try {
-      const data = await this._redisClient.get(key)
+      const data = await this.#redisClient.get(key)
       return data ? JSON.parse(data) : null
 
     } catch (error) {
@@ -28,7 +30,7 @@ export default class RedisService {
 
   deleteData = async key => {
     try {
-      await this._redisClient.del(key)
+      await this.#redisClient.del(key)
 
     } catch (error) {
 

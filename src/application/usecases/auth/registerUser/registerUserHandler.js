@@ -1,38 +1,46 @@
 import JwtPayload from '../../../../domain/auth/jwtPayload.js'
 import Steps from '../../../../domain/auth/steps.js'
+import UserModel from '../../../../domain/model/userModel.js'
 import EmailTemplate from '../../../../domain/emailTemplate.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
 import TokenGeneratorService from '../../../services/tokenGeneratorService.js'
 import RegisterUserResponse from './registerUserResponse.js'
 
 export default class RegisterUserHandler {
+  #userRepository
+  #emailService
+  #jwtService
+  #passwordHasherService
+  #redisService
+
   constructor({ userRepository, emailService, jwtService, passwordHasherService, redisService }) {
-    this._userRepository = userRepository
-    this._emailService = emailService
-    this._jwtService = jwtService
-    this._passwordHasherService = passwordHasherService
-    this._redisService = redisService
+    this.#userRepository = userRepository
+    this.#emailService = emailService
+    this.#jwtService = jwtService
+    this.#passwordHasherService = passwordHasherService
+    this.#redisService = redisService
   }
 
   handle = async command => {
-    const userExists = this._userRepository.existsByEmail(command.email)
+    const email = command.getEmail()
+    const userExists = await this.#userRepository.existsByEmail(email)
+
     if (userExists) {
+      // TODO criar exception pra nao retornar 500
       throw new Error('Um usuário com esse email já existe.')
     }
 
+    const password_hash = await this.#passwordHasherService.hash(command.getPassword())
+    const user = new UserModel({ name: command.getName(), email: command.getEmail(), password_hash })
+    await this.#userRepository.createUser(user)
+
     const code = TokenGeneratorService.generateToken(6)
-    const password = await this._passwordHasherService.hash(command.password)
+    const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_CODE, { email })
 
-    const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_DATA, { email: command.email })
-    await this._redisService.setData(key, { code, password }, { expiration: 900 })
+    await this.#redisService.setData(key, code, { expiration: 900 })
+    await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
-    await this._emailService.sendEmail(command.email, EmailTemplate.EMAIL_VERIFICATION, { code })
-
-    const token = this._jwtService.generateAccessToken(new JwtPayload({
-      name: command.name,
-      email: command.email
-    }), { step: Steps.EMAIL_VERIFICATION })
-
+    const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }),{ step: Steps.EMAIL_VERIFICATION })
     return new RegisterUserResponse(token)
   }
 }

@@ -1,8 +1,10 @@
 import EmailTemplate from '../../domain/emailTemplate.js'
 
 export default class EmailService {
+    #smtpClient
+
     constructor({ smtpClient }) {
-        this._smtpClient = smtpClient
+        this.#smtpClient = smtpClient
     }
 
     sendEmail = async (emailAddress, templateType, params = {}) => {
@@ -11,7 +13,7 @@ export default class EmailService {
                 throw new Error(`Template de e-mail desconhecido: ${templateType}`)
             }
 
-            await this._smtpClient.sendMail({
+            await this.#smtpClient.sendMail({
                 from: `"Auth System" <${process.env.EMAIL_ADDRESS}>`,
                 to: emailAddress,
                 ...EmailTemplate.getTemplate(templateType)(params)
