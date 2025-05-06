@@ -6,8 +6,8 @@ export default [
         .withMessage('O email é obrigatório')
         .isEmail()
         .withMessage('O email informado é inválido'),
-    
-    body('code')
+
+    body('password')
         .notEmpty()
-        .withMessage('O código de confirmação é obrigatório')
+        .withMessage('A senha é obrigatória')
 ]

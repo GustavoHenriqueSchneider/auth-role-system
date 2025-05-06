@@ -5,9 +5,5 @@ export default [
         .notEmpty()
         .withMessage('O email é obrigatório')
         .isEmail()
-        .withMessage('O email informado é inválido'),
-    
-    body('code')
-        .notEmpty()
-        .withMessage('O código de confirmação é obrigatório')
+        .withMessage('O email informado é inválido')
 ]

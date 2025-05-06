@@ -1,5 +1,5 @@
 export const up = knex => {
-    return knex.schema.createTable('user_roles', (table) => {
+    return knex.schema.createTable('user_roles', table => {
         table.increments('id').primary()
         table.integer('user_id').unsigned().notNullable()
         table.integer('role_id').unsigned().notNullable()
@@ -11,6 +11,4 @@ export const up = knex => {
     })
 }
 
-export const down = knex => {
-    return knex.schema.dropTable('user_roles')
-}
+export const down = knex => knex.schema.dropTable('user_roles')

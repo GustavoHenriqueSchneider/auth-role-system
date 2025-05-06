@@ -1,5 +1,8 @@
 import Roles from '../../domain/auth/roles.js'
 import Steps from '../../domain/auth/steps.js'
+import BadRequestException from '../exceptions/badRequestException.js'
+import ForbiddenException from '../exceptions/forbiddenException.js'
+import UnauthorizedException from '../exceptions/unauthorizedException.js'
 
 export default ({ tokenType = 'access', step, role }) => async (req, res, next) => {
     try {
@@ -7,9 +10,7 @@ export default ({ tokenType = 'access', step, role }) => async (req, res, next) 
         const token = authHeader?.split(' ')[1]
 
         if (!token) {
-            const error = new Error('Token não fornecido.')
-            error.statusCode = 401
-            return next(error)
+            return next(new UnauthorizedException('Token não fornecido.'))
         }
 
         const payload = req.container
@@ -17,23 +18,17 @@ export default ({ tokenType = 'access', step, role }) => async (req, res, next) 
             .verifyToken(token)
 
         if (tokenType && payload.tokenType !== tokenType) {
-            const error = new Error(`Tipo de token inválido.`)
-            error.statusCode = 403
-            return next(error)
+            return next(new ForbiddenException(`Tipo de token inválido.`))
         }
 
         if (step) {
 
             if (!Steps.isValidStep(payload.step)) {
-                const error = new Error(`O passo '${payload.step}' não é válido.`)
-                error.statusCode = 403
-                return next(error)
+                return next(new BadRequestException(`O passo '${payload.step}' não é válido.`))
             }
 
             if (payload.step !== step) {
-                const error = new Error(`Token inválido para o passo '${step}'.`)
-                error.statusCode = 403
-                return next(error)
+                return next(new ForbiddenException(`Token inválido para o passo '${step}'.`))
             }
         }
 
@@ -42,15 +37,11 @@ export default ({ tokenType = 'access', step, role }) => async (req, res, next) 
             const invalid_roles = payload.roles.filter(role => !Roles.isValidRole(role))
 
             if (invalid_roles) {
-                const error = new Error(`Os cargos '${invalid_roles.join("', '")}' são inválidos.`)
-                error.statusCode = 403
-                return next(error)
+                return next(new BadRequestException(`Os cargos '${invalid_roles.join("', '")}' são inválidos.`))
             }
 
             if (!payload.roles.includes(role)) {
-                const error = new Error(`O usuário atual não possui o cargo '${role}' necessário.`)
-                error.statusCode = 403
-                return next(error)
+                return next(new ForbiddenException(`O usuário atual não possui o cargo '${role}' necessário.`))
             }
         }
 
@@ -59,8 +50,10 @@ export default ({ tokenType = 'access', step, role }) => async (req, res, next) 
 
     } catch (error) {
 
-        const err = new Error('Erro ao validar o token.')
-        err.statusCode = err.statusCode || 401
-        next(err)
+        if (error.name === 'TokenExpiredError') {
+            next(new UnauthorizedException('Token expirado.'))
+        }
+
+        next(new UnauthorizedException('Erro ao validar o token.'))
     }
 }

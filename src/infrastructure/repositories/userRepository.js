@@ -1,3 +1,5 @@
+import UserModel from "../../domain/model/userModel.js"
+
 export default class UserRepository {
   #knexClient
 
@@ -17,10 +19,12 @@ export default class UserRepository {
     return result.id
   }
 
-  getUserById = async userId => {
-    return await this.#getDatabase()
-      .where({ id: userId })
+  getUserByEmail = async email => {
+    const userDto = await this.#getDatabase()
+      .where({ email })
       .first()
+
+    return userDto ? new UserModel(userDto) : null
   }
 
   existsByEmail = async email => {
@@ -37,9 +41,12 @@ export default class UserRepository {
       .del()
   }
 
-  updateUserById = async (userId, user) => {
+  updateUser = async user => {
+    const userDto = user.toDatabaseObject()
+    userDto.updated_at = new Date()
+
     return await this.#getDatabase()
-      .where({ id: userId })
-      .update(user)
+      .where({ id: user.getId() })
+      .update(userDto)
   }
 }

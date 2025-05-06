@@ -5,6 +5,7 @@ import EmailTemplate from '../../../../domain/emailTemplate.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
 import TokenGeneratorService from '../../../services/tokenGeneratorService.js'
 import RegisterUserResponse from './registerUserResponse.js'
+import AlreadyExistsException from '../../../../webapi/exceptions/alreadyExistsException.js'
 
 export default class RegisterUserHandler {
   #userRepository
@@ -26,12 +27,11 @@ export default class RegisterUserHandler {
     const userExists = await this.#userRepository.existsByEmail(email)
 
     if (userExists) {
-      // TODO criar exception pra nao retornar 500
-      throw new Error('Um usuário com esse email já existe.')
+      throw new AlreadyExistsException('Um usuário com esse email já existe.')
     }
 
-    const password_hash = await this.#passwordHasherService.hash(command.getPassword())
-    const user = new UserModel({ name: command.getName(), email: command.getEmail(), password_hash })
+    const passwordHash = await this.#passwordHasherService.hash(command.getPassword())
+    const user = new UserModel({ name: command.getName(), email: command.getEmail(), password_hash: passwordHash })
     await this.#userRepository.createUser(user)
 
     const code = TokenGeneratorService.generateToken(6)

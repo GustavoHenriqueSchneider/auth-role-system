@@ -1,4 +1,5 @@
 import { validationResult } from 'express-validator'
+import BadRequestException from '../exceptions/badRequestException.js'
 
 export default (Request, validator) => async (req, res, next) => {
     try {
@@ -6,10 +7,7 @@ export default (Request, validator) => async (req, res, next) => {
         const result = validationResult(req)
 
         if (!result.isEmpty()) {
-            const error = new Error('Erro de validação')
-            error.statusCode = 400
-            error.details = result.array()
-            return next(error)
+            return next(new BadRequestException('Erro de validação.', { details: result.array() }))
         }
 
         req.command = new Request(req.body)

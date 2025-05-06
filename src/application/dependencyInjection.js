@@ -1,11 +1,21 @@
 import { asClass } from 'awilix'
 
-import RegisterUserHandler from './usecases/auth/registerUser/registerUserHandler.js'
 import ConfirmUserEmailHandler from './usecases/auth/confirmUserEmail/confirmUserEmailHandler.js'
+import LoginUserHandler from './usecases/auth/loginUser/loginUserHandler.js'
+// import LogoutUserHandler from './usecases/auth/logoutUser/logoutUserHandler.js'
+import RegisterUserHandler from './usecases/auth/registerUser/registerUserHandler.js'
+import ResendUserEmailConfirmationHandler from './usecases/auth/resendUserEmailConfirmation/resendUserEmailConfirmationHandler.js'
+// import ResetUserPasswordHandler from './usecases/auth/resetUserPassword/resetUserPasswordHandler.js'
+// import SendUserPasswordResetEmailHandler from './usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailHandler.js'
 
 export default container => {
   container.register({
+    confirmUserEmailHandler: asClass(ConfirmUserEmailHandler).scoped(),
+    loginUserHandler: asClass(LoginUserHandler).scoped(),
+    // logoutUserHandler: asClass(LogoutUserHandler).scoped(),
     registerUserHandler: asClass(RegisterUserHandler).scoped(),
-    confirmUserEmailHandler: asClass(ConfirmUserEmailHandler).scoped()
+    resendUserEmailConfirmationHandler: asClass(ResendUserEmailConfirmationHandler).scoped(),
+    // resetUserPasswordHandler: asClass(ResetUserPasswordHandler).scoped(),
+    // sendUserPasswordResetEmailHandler: asClass(SendUserPasswordResetEmailHandler).scoped()
   })
 }

@@ -26,5 +26,5 @@ app.use('/users', userController)
 app.use(errorHandler)
 app.listen(3000, () => console.log(`running`))
 
-// TODO: criar docker-compose com postgres, elasticsearch
-// TODO: implementar swagger, eslint e exceptions
+// TODO: criar docker-compose com elasticsearch
+// TODO: implementar swagger, eslint

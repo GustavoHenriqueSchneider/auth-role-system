@@ -4,8 +4,8 @@ export default class JwtPayload {
     #email
     #roles
 
-    constructor({ userId, name, email, roles }) {
-        this.userId = userId
+    constructor({ id, name, email, roles }) {
+        this.userId = id
         this.name = name
         this.email = email
         this.roles = roles
