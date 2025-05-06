@@ -1,5 +1,8 @@
 import express from 'express'
+
+import Roles from '../../domain/auth/roles.js'
 import Steps from '../../domain/auth/steps.js'
+import TokenTypes from '../../domain/auth/tokenTypes.js'
 
 import asyncHandlerMiddleware from '../middlewares/asyncHandlerMiddleware.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
@@ -44,6 +47,19 @@ router.post('/login',
 )
 
 // router.post('/logout',
+//     authMiddleware({ role: Roles.USER }),
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(200).send()
+//     })
+// )
+
+// router.post('/refresh',
+//     authMiddleware({ tokenType: TokenTypes.REFRESH }),
 //     validatorMiddleware(Command, Validator),
 //     asyncHandlerMiddleware(async (req, res, next) => {
 //         await req.container
@@ -79,15 +95,16 @@ router.post('/email/resend-confirmation',
 // router.post('/reset-password/confirm',
 //     validatorMiddleware(Command, Validator),
 //     asyncHandlerMiddleware(async (req, res, next) => {
-//         await req.container
+//         const response = await req.container
 //             .resolve('Handler')
 //             .handle(req.command)
 
-//         res.status(200).send()
+//         res.status(200).json(response)
 //     })
 // )
 
 // router.post('/reset-password',
+//     authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }),
 //     validatorMiddleware(Command, Validator),
 //     asyncHandlerMiddleware(async (req, res, next) => {
 //         await req.container
