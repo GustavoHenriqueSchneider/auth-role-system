@@ -1,42 +1,39 @@
-import { createClient } from 'redis'
-
 export default class RedisService {
-  constructor() {
-    this._client = createClient({ url: process.env.REDIS_URL })
-
-    this._client()
-      .catch((err) => console.error('Falha na conexão com o Redis', err))
+  constructor({ redisClient }) {
+    this._redisClient = redisClient
   }
 
   setData = async (key, value, { expiration = 3600 } = {}) => {
     try {
-      await this._client.setEx(key, expiration, JSON.stringify(value))
+      await this._redisClient.setEx(key, expiration, JSON.stringify(value))
 
     } catch (error) {
 
-      console.error('Erro ao armazenar dados no Redis:', error)
+      console.error('Erro ao armazenar dados no Redis')
+      throw error
     }
   }
 
   getData = async key => {
     try {
-      const data = await this._client.get(key)
+      const data = await this._redisClient.get(key)
       return data ? JSON.parse(data) : null
 
     } catch (error) {
 
-      console.error('Erro ao buscar dados no Redis:', error)
+      console.error('Erro ao buscar dados no Redis')
       return null
     }
   }
 
   deleteData = async key => {
     try {
-      await this._client.del(key)
+      await this._redisClient.del(key)
 
     } catch (error) {
 
-      console.error('Erro ao deletar dados no Redis:', error)
+      console.error('Erro ao deletar dados no Redis')
+      throw error
     }
   }
 }

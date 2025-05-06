@@ -1,30 +1,37 @@
 import JwtPayload from '../../../../domain/auth/jwtPayload.js'
 import Steps from '../../../../domain/auth/steps.js'
+import EmailTemplate from '../../../../domain/emailTemplate.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
 import TokenGeneratorService from '../../../services/tokenGeneratorService.js'
 import RegisterUserResponse from './registerUserResponse.js'
 
 export default class RegisterUserHandler {
-  constructor({ jwtService, redisService }) {
+  constructor({ userRepository, emailService, jwtService, passwordHasherService, redisService }) {
+    this._userRepository = userRepository
+    this._emailService = emailService
     this._jwtService = jwtService
+    this._passwordHasherService = passwordHasherService
     this._redisService = redisService
   }
 
   handle = async command => {
+    const userExists = this._userRepository.existsByEmail(command.email)
+    if (userExists) {
+      throw new Error('Um usuário com esse email já existe.')
+    }
+
     const code = TokenGeneratorService.generateToken(6)
+    const password = await this._passwordHasherService.hash(command.password)
 
-    const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_CODE, { email: command.email })
-    await this._redisService.setData(key, code)
+    const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_DATA, { email: command.email })
+    await this._redisService.setData(key, { code, password }, { expiration: 900 })
 
-    // TODO: envia o email com código
-    console.log(code)
+    await this._emailService.sendEmail(command.email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
-    // TODO: criptografar a senha
     const token = this._jwtService.generateAccessToken(new JwtPayload({
       name: command.name,
-      email: command.email,
-      password: command.password
-    }), Steps.EMAIL_VERIFICATION)
+      email: command.email
+    }), { step: Steps.EMAIL_VERIFICATION })
 
     return new RegisterUserResponse(token)
   }

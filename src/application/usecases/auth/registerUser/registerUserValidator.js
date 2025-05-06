@@ -4,11 +4,15 @@ import passwordValidator from '../../../validators/passwordValidator.js'
 export default [
     body('name')
         .notEmpty()
-        .withMessage('Nome é obrigatório'),
+        .withMessage('O nome é obrigatório')
+        .isLength({ max: 200 })
+        .withMessage('O nome deve ter no máximo 200 caracteres'),
 
     body('email')
+        .notEmpty()
+        .withMessage('O email é obrigatório')
         .isEmail()
-        .withMessage('E-mail inválido'),
+        .withMessage('O email informado é inválido'),
 
     passwordValidator('password')
 ]

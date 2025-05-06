@@ -1,6 +1,8 @@
 import express from 'express'
-import { setupDependencies, container } from './dependencyInjection.js'
 import { scopePerRequest } from 'awilix-express'
+import { config } from 'dotenv'
+
+import { setupDependencies, container } from './dependencyInjection.js'
 
 import errorHandler from './src/webapi/middlewares/errorHandlerMiddleware.js'
 
@@ -9,6 +11,7 @@ import logController from './src/webapi/controllers/logController.js'
 import roleController from './src/webapi/controllers/roleController.js'
 import userController from './src/webapi/controllers/userController.js'
 
+config()
 setupDependencies()
 
 const app = express()
@@ -23,6 +26,5 @@ app.use('/users', userController)
 app.use(errorHandler)
 app.listen(3000, () => console.log(`running`))
 
-// TODO: criar docker-compose com redis, postgres, elasticsearch
+// TODO: criar docker-compose com postgres, elasticsearch
 // TODO: implementar swagger
-// TODO: implementar nodemailer

@@ -5,7 +5,7 @@ export default class JwtService {
         this._secret = process.env.JWT_SECRET
     }
 
-    generateAccessToken = (payload, step) =>
+    generateAccessToken = (payload, { step } = {}) =>
         jwt.sign({ data: payload, tokenType: 'access', step }, this._secret, { expiresIn: '15m' })
 
     generateRefreshToken = payload =>
