@@ -27,4 +27,4 @@ app.use(errorHandler)
 app.listen(3000, () => console.log(`running`))
 
 // TODO: criar docker-compose com postgres, elasticsearch
-// TODO: implementar swagger
+// TODO: implementar swagger, eslint e exceptions
