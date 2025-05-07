@@ -5,8 +5,15 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch server.js",
-    "start": "node server.js"
+    "db:reset-migrations": "knex migrate:rollback --all && knex migrate:latest",
+    "db:reset-data": "npx knex seed:run --specific=truncate_all.js",
+    "db:initial-seed": "npx knex seed:run --specific=seed_initial.js",
+    "db:reset": "npm run db:reset-migrations && npm run db:reset-data && npm run db:initial-seed",
+    "db:terminal": "docker exec -it postgres-container psql -U auth_user -d auth_db",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "dev": "npm run docker:up && node --watch server.js",
+    "start": "npm run docker:up && node server.js"
   },
   "author": "",
   "license": "ISC",

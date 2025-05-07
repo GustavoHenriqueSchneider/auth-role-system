@@ -6,7 +6,7 @@ import BadRequestException from '../exceptions/badRequestException.js'
 import ForbiddenException from '../exceptions/forbiddenException.js'
 import UnauthorizedException from '../exceptions/unauthorizedException.js'
 
-export default ({ tokenType = TokenTypes.ACCESS, step, role }) => async (req, res, next) => {
+export default ({ step, role } = {}) => async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization']
         const token = authHeader?.split(' ')[1]
@@ -23,7 +23,7 @@ export default ({ tokenType = TokenTypes.ACCESS, step, role }) => async (req, re
             return next(new BadRequestException(`O tipo de token '${payload.tokenType}' não é válido.`))
         }
 
-        if (payload.tokenType !== tokenType) {
+        if (payload.tokenType !== TokenTypes.ACCESS) {
             return next(new ForbiddenException(`O token informado não é do tipo necessário.`))
         }
 
@@ -40,14 +40,14 @@ export default ({ tokenType = TokenTypes.ACCESS, step, role }) => async (req, re
 
         if (role) {
 
-            const invalid_roles = payload.roles.filter(role => !Roles.isValidRole(role))
+            const invalid_roles = payload.data.roles.filter(role => !Roles.isValidRole(role))
 
-            if (invalid_roles) {
+            if (invalid_roles.length > 0) {
                 return next(new BadRequestException(`Os cargos '${invalid_roles.join("', '")}' são inválidos.`))
             }
 
-            if (!payload.roles.includes(role)) {
-                return next(new ForbiddenException(`O usuário atual não possui o cargo '${role}' necessário.`))
+            if (!payload.data.roles.includes(role)) {
+                return next(new ForbiddenException(`O usuário atual não possui o cargo necessário.`))
             }
         }
 

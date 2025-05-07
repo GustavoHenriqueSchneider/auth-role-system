@@ -21,16 +21,14 @@ export default class ResendUserEmailConfirmationHandler {
   handle = async command => {
     const email = command.getEmail()
     const user = await this.#userRepository.getUserByEmail(email)
-    
     const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
-    const response = new ResendUserEmailConfirmationResponse(token)
 
     if (user === null) {
-      return response
+      return new ResendUserEmailConfirmationResponse(token)
     }
 
     if (user.isVerified()) {
-      return response
+      return new ResendUserEmailConfirmationResponse(token)
     }
 
     const code = TokenGeneratorService.generateToken(6)
@@ -38,6 +36,7 @@ export default class ResendUserEmailConfirmationHandler {
 
     await this.#redisService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
-    return response
+
+    return new ResendUserEmailConfirmationResponse(token)
   }
 }

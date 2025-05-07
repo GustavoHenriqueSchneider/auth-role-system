@@ -41,15 +41,16 @@ export default class LoginUserHandler {
       throw new BadRequestException('Esse usuário ainda não teve seu email confirmado.')
     }
 
+    const userId = user.getId()
     const accessToken = this.#jwtService.generateAccessToken(new JwtPayload({
-      id: user.getId(),
+      id: userId,
       name: user.getName(),
       email: user.getEmail(),
-      // roles: user.getRoles()
+      roles: user.getRoles()
     }))
 
-    const key = RedisKeys.formatKey(RedisKeys.USER_REFRESH_TOKEN, { email })
-    const refreshToken = this.#jwtService.generateRefreshToken(new JwtPayload({ id: user.getId() }))
+    const key = RedisKeys.formatKey(RedisKeys.USER_REFRESH_TOKEN, { userId })
+    const refreshToken = this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
     await this.#redisService.setData(key, refreshToken, { expiration: 604800 })
 
     return new LoginUserResponse(accessToken, refreshToken)

@@ -7,7 +7,7 @@ export const up = knex => {
         table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE')
         table.foreign('role_id').references('id').inTable('roles').onDelete('CASCADE')
 
-        table.unique(['user_id', 'role_id']) // impede papéis duplicados
+        table.unique(['user_id', 'role_id'])
     })
 }
 

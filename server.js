@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 
 import { setupDependencies, container } from './dependencyInjection.js'
 
-import errorHandler from './src/webapi/middlewares/errorHandlerMiddleware.js'
+import errorHandlerMiddleware from './src/webapi/middlewares/errorHandlerMiddleware.js'
 
 import authController from './src/webapi/controllers/authController.js'
 import logController from './src/webapi/controllers/logController.js'
@@ -23,7 +23,7 @@ app.use('/logs', logController)
 app.use('/roles', roleController)
 app.use('/users', userController)
 
-app.use(errorHandler)
+app.use(errorHandlerMiddleware)
 app.listen(3000, () => console.log(`running`))
 
 // TODO: criar docker-compose com elasticsearch
