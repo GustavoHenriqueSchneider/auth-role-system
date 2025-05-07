@@ -27,4 +27,4 @@ app.use(errorHandlerMiddleware)
 app.listen(3000, () => console.log('running'))
 
 // TODO: criar docker-compose com elasticsearch
-// TODO: implementar swagger, eslint
+// TODO: implementar swagger
