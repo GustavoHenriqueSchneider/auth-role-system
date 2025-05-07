@@ -1,5 +1,7 @@
 import express from 'express'
 import { scopePerRequest } from 'awilix-express'
+import swaggerUi from 'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc'
 import { config } from 'dotenv'
 
 import { setupDependencies, container } from './dependencyInjection.js'
@@ -18,13 +20,46 @@ const app = express()
 app.use(express.json())
 app.use(scopePerRequest(container))
 
+const documentationRoute = '/docs'
+const documentationUrl = `http://localhost:${process.env.APPLICATION_PORT}${documentationRoute}`
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Auth Role System API',
+      version: '1.0.0',
+      description: 'Documentação da API de autenticação e gerenciamento de usuários'
+    },
+    servers: [
+      { url: documentationUrl }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
+  },
+  apis: [ './src/webapi/controllers/*.js' ]
+}
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions)
+
+app.use(documentationRoute, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
+// CONTROLLERs
 app.use('/auth', authController)
 app.use('/logs', logController)
 app.use('/roles', roleController)
 app.use('/users', userController)
 
 app.use(errorHandlerMiddleware)
-app.listen(3000, () => console.log('running'))
+
+app.listen(process.env.APPLICATION_PORT, () =>
+  console.log(`Aplicação em execução. Documentação disponível em: ${documentationUrl}`))
 
 // TODO: criar docker-compose com elasticsearch
-// TODO: implementar swagger

@@ -26,98 +26,302 @@ import sendUserPasswordResetEmailValidator from '../../application/usecases/auth
 
 const router = express.Router()
 
+/**
+ * @swagger
+ * /auth/email/validate:
+ *   post:
+ *     summary: Confirma o e-mail de um usuário
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [code]
+ *             properties:
+ *               code:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: E-mail confirmado com sucesso
+ */
 router.post('/email/validate',
-    authMiddleware({ step: Steps.EMAIL_VERIFICATION }),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        req.body.email = req.user.email
-        next()
-    }),
-    validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        await req.container
-            .resolve('confirmUserEmailHandler')
-            .handle(req.command)
+	authMiddleware({ step: Steps.EMAIL_VERIFICATION }),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		req.body.email = req.user.email
+		next()
+	}),
+	validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		await req.container
+			.resolve('confirmUserEmailHandler')
+			.handle(req.command)
 
-        res.status(200).send()
-    }))
+		res.status(200).send()
+	}))
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Autentica um usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login bem-sucedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ */
 router.post('/login',
-    validatorMiddleware(LoginUserCommand, loginUserValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        const response = await req.container
-            .resolve('loginUserHandler')
-            .handle(req.command)
+	validatorMiddleware(LoginUserCommand, loginUserValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		const response = await req.container
+			.resolve('loginUserHandler')
+			.handle(req.command)
 
-        res.status(200).json(response)
-    }))
+		res.status(200).json(response)
+	}))
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Realiza logout do usuário autenticado
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout bem-sucedido
+ */
 router.post('/logout',
-    authMiddleware({ role: Roles.USER }),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        req.body.userId = req.user.userId
-        next()
-    }), validatorMiddleware(LogoutUserCommand, logoutUserValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        await req.container
-            .resolve('logoutUserHandler')
-            .handle(req.command)
+	authMiddleware({ role: Roles.USER }),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		req.body.userId = req.user.userId
+		next()
+	}),
+	validatorMiddleware(LogoutUserCommand, logoutUserValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		await req.container
+			.resolve('logoutUserHandler')
+			.handle(req.command)
 
-        res.status(200).send()
-    }))
+		res.status(200).send()
+	}))
 
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Gera um novo access token e refresh token a partir do refresh token atual
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Tokens atualizados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ */
 router.post('/refresh',
-    validatorMiddleware(RefreshTokenCommand, refreshTokenValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        const response = await req.container
-            .resolve('refreshTokenHandler')
-            .handle(req.command)
+	validatorMiddleware(RefreshTokenCommand, refreshTokenValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		const response = await req.container
+			.resolve('refreshTokenHandler')
+			.handle(req.command)
 
-        res.status(200).json(response)
-    }))
+		res.status(200).json(response)
+	}))
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registra um novo usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, email, password]
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuário registrado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ */
 router.post('/register',
-    validatorMiddleware(RegisterUserCommand, registerUserValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        const response = await req.container
-            .resolve('registerUserHandler')
-            .handle(req.command)
+	validatorMiddleware(RegisterUserCommand, registerUserValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		const response = await req.container
+			.resolve('registerUserHandler')
+			.handle(req.command)
 
-        res.status(201).json(response)
-    }))
+		res.status(201).json(response)
+	}))
 
+/**
+ * @swagger
+ * /auth/email/resend-confirmation:
+ *   post:
+ *     summary: Reenvia o código de confirmação de e-mail
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Código reenviado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ */
 router.post('/email/resend-confirmation',
-    validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        const response = await req.container
-            .resolve('resendUserEmailConfirmationHandler')
-            .handle(req.command)
+	validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		const response = await req.container
+			.resolve('resendUserEmailConfirmationHandler')
+			.handle(req.command)
 
-        res.status(200).json(response)
-    }))
+		res.status(200).json(response)
+	}))
 
+/**
+ * @swagger
+ * /auth/reset-password/confirm:
+ *   post:
+ *     summary: Redefine a senha de um usuário
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [code, password]
+ *             properties:
+ *               code:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Senha redefinida com sucesso
+ */
 router.post('/reset-password/confirm',
-    authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        req.body.email = req.user.email
-        next()
-    }),
-    validatorMiddleware(ResetUserPasswordCommand, resetUserPasswordValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        await req.container
-            .resolve('resetUserPasswordHandler')
-            .handle(req.command)
+	authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		req.body.email = req.user.email
+		next()
+	}),
+	validatorMiddleware(ResetUserPasswordCommand, resetUserPasswordValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		await req.container
+			.resolve('resetUserPasswordHandler')
+			.handle(req.command)
 
-        res.status(200).send()
-    }))
+		res.status(200).send()
+	}))
 
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Solicita o envio de um código de redefinição de senha
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Código de redefinição enviado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ */
 router.post('/reset-password',
-    validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator),
-    asyncHandlerMiddleware(async (req, res, next) => {
-        const response = await req.container
-            .resolve('sendUserPasswordResetEmailHandler')
-            .handle(req.command)
+	validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator),
+	asyncHandlerMiddleware(async (req, res, next) => {
+		const response = await req.container
+			.resolve('sendUserPasswordResetEmailHandler')
+			.handle(req.command)
 
-        res.status(200).json(response)
-    }))
+		res.status(200).json(response)
+	}))
 
 export default router
