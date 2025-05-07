@@ -3,6 +3,6 @@ export default class TokenTypes {
   static REFRESH = 'refresh'
 
   static isValidTokenType = tokenType => Object.entries(TokenTypes)
-    .filter(([key, value]) => typeof value === 'string')
-    .some(([_, value]) => value === tokenType)
+    .filter(([ key, value ]) => typeof value === 'string')
+    .some(([ _, value ]) => value === tokenType)
 }

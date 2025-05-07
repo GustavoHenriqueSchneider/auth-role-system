@@ -2,7 +2,6 @@ import express from 'express'
 
 import Roles from '../../domain/auth/roles.js'
 import Steps from '../../domain/auth/steps.js'
-import TokenTypes from '../../domain/auth/tokenTypes.js'
 
 import asyncHandlerMiddleware from '../middlewares/asyncHandlerMiddleware.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
@@ -40,8 +39,7 @@ router.post('/email/validate',
             .handle(req.command)
 
         res.status(200).send()
-    })
-)
+    }))
 
 router.post('/login',
     validatorMiddleware(LoginUserCommand, loginUserValidator),
@@ -51,24 +49,21 @@ router.post('/login',
             .handle(req.command)
 
         res.status(200).json(response)
-    })
-)
+    }))
 
 router.post('/logout',
     authMiddleware({ role: Roles.USER }),
     asyncHandlerMiddleware(async (req, res, next) => {
         req.body.userId = req.user.userId
         next()
-    }),
-    validatorMiddleware(LogoutUserCommand, logoutUserValidator),
+    }), validatorMiddleware(LogoutUserCommand, logoutUserValidator),
     asyncHandlerMiddleware(async (req, res, next) => {
         await req.container
             .resolve('logoutUserHandler')
             .handle(req.command)
 
         res.status(200).send()
-    })
-)
+    }))
 
 router.post('/refresh',
     validatorMiddleware(RefreshTokenCommand, refreshTokenValidator),
@@ -78,8 +73,7 @@ router.post('/refresh',
             .handle(req.command)
 
         res.status(200).json(response)
-    })
-)
+    }))
 
 router.post('/register',
     validatorMiddleware(RegisterUserCommand, registerUserValidator),
@@ -89,8 +83,7 @@ router.post('/register',
             .handle(req.command)
 
         res.status(201).json(response)
-    })
-)
+    }))
 
 router.post('/email/resend-confirmation',
     validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator),
@@ -100,8 +93,7 @@ router.post('/email/resend-confirmation',
             .handle(req.command)
 
         res.status(200).json(response)
-    })
-)
+    }))
 
 router.post('/reset-password/confirm',
     authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }),
@@ -116,8 +108,7 @@ router.post('/reset-password/confirm',
             .handle(req.command)
 
         res.status(200).send()
-    })
-)
+    }))
 
 router.post('/reset-password',
     validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator),
@@ -127,7 +118,6 @@ router.post('/reset-password',
             .handle(req.command)
 
         res.status(200).json(response)
-    })
-)
+    }))
 
 export default router

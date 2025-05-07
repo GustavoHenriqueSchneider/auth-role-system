@@ -11,11 +11,7 @@ export default {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME
     },
-    migrations: {
-      directory: './src/infrastructure/database/migrations'
-    },
-    seeds: {
-      directory: './src/infrastructure/database/seeds'
-    }
+    migrations: { directory: './src/infrastructure/database/migrations' },
+    seeds: { directory: './src/infrastructure/database/seeds' }
   }
 }

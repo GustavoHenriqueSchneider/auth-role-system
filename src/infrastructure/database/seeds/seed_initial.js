@@ -15,9 +15,9 @@ export async function seed(knex) {
       { name: Roles.ADMIN },
       { name: Roles.USER }
     ])
-    .returning(['id', 'name'])
+    .returning([ 'id', 'name' ])
 
-  const [{ adminUserId }] = await knex('users')
+  const [ { adminUserId } ] = await knex('users')
     .insert({
       name: 'Administrador',
       email: process.env.ADMIN_EMAIL,

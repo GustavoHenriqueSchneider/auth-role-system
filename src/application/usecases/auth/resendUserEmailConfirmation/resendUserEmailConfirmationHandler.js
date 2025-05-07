@@ -11,7 +11,9 @@ export default class ResendUserEmailConfirmationHandler {
   #jwtService
   #redisService
 
-  constructor({ userRepository, emailService, jwtService, redisService }) {
+  constructor({
+    userRepository, emailService, jwtService, redisService
+  }) {
     this.#userRepository = userRepository
     this.#emailService = emailService
     this.#jwtService = jwtService

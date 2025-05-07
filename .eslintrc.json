@@ -1,0 +1,56 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "extends": ["eslint:recommended"],
+    "overrides": [],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "ignorePatterns": [
+      "/node_modules",
+      "/.vscode",
+      "/.idea"
+    ],
+    "rules": {
+      "max-len": [
+        "error",
+        {
+          "code": 160,
+          "ignoreUrls": false,
+          "ignoreStrings": false,
+          "ignoreTemplateLiterals": false
+        }
+      ],
+      "no-extra-boolean-cast": ["off"],
+      "object-curly-newline": [
+        "error",
+        {
+          "ObjectExpression": { "multiline": true, "minProperties": 3, "consistent": false },
+          "ObjectPattern": { "multiline": true, "minProperties": 3, "consistent": false },
+          "ImportDeclaration": "never",
+          "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+        }
+      ],
+      "function-paren-newline": ["error", "never"],
+      "function-call-argument-newline": ["error", "never"],
+      "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "linebreak-style": ["off"],
+      "quotes": ["error", "single"],
+      "semi": ["error", "never"],
+      "no-irregular-whitespace": ["error", { "skipComments": true }],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
+      "object-curly-spacing": ["error", "always"],
+      "array-bracket-spacing": ["error", "always"],
+      "computed-property-spacing": ["error", "never"],
+      "curly": ["error", "all"],
+      "brace-style": ["error", "1tbs"],
+      "no-trailing-spaces": ["error"],
+      "comma-spacing": ["error"],
+      "arrow-parens": ["error", "as-needed"]
+    }
+  }

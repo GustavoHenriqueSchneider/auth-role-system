@@ -14,7 +14,9 @@ export default class RegisterUserHandler {
   #passwordHasherService
   #redisService
 
-  constructor({ userRepository, emailService, jwtService, passwordHasherService, redisService }) {
+  constructor({
+    userRepository, emailService, jwtService, passwordHasherService, redisService
+  }) {
     this.#userRepository = userRepository
     this.#emailService = emailService
     this.#jwtService = jwtService
@@ -31,7 +33,9 @@ export default class RegisterUserHandler {
     }
 
     const passwordHash = await this.#passwordHasherService.hash(command.getPassword())
-    const user = new UserModel({ name: command.getName(), email: command.getEmail(), password_hash: passwordHash })
+    const user = new UserModel({
+      name: command.getName(), email: command.getEmail(), password_hash: passwordHash
+    })
     await this.#userRepository.createUser(user)
 
     const code = TokenGeneratorService.generateToken(6)
@@ -40,7 +44,7 @@ export default class RegisterUserHandler {
     await this.#redisService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
-    const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }),{ step: Steps.EMAIL_VERIFICATION })
+    const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
     return new RegisterUserResponse(token)
   }
 }

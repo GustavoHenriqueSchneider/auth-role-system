@@ -1,11 +1,6 @@
 import JwtPayload from '../../../../domain/auth/jwtPayload.js'
-import Steps from '../../../../domain/auth/steps.js'
-import UserModel from '../../../../domain/model/userModel.js'
-import EmailTemplate from '../../../../domain/emailTemplate.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
-import TokenGeneratorService from '../../../services/tokenGeneratorService.js'
 import LoginUserResponse from './loginUserResponse.js'
-import AlreadyExistsException from '../../../../webapi/exceptions/alreadyExistsException.js'
 import UnauthorizedException from '../../../../webapi/exceptions/unauthorizedException.js'
 import BadRequestException from '../../../../webapi/exceptions/badRequestException.js'
 
@@ -15,7 +10,9 @@ export default class LoginUserHandler {
   #passwordHasherService
   #redisService
 
-  constructor({ userRepository, jwtService, passwordHasherService, redisService }) {
+  constructor({
+    userRepository, jwtService, passwordHasherService, redisService
+  }) {
     this.#userRepository = userRepository
     this.#jwtService = jwtService
     this.#passwordHasherService = passwordHasherService

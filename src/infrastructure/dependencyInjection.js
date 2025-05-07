@@ -20,9 +20,7 @@ const registerClients = container => {
 }
 
 const registerRepositories = container => {
-  container.register({
-    userRepository: asClass(UserRepository).singleton()
-  })
+  container.register({ userRepository: asClass(UserRepository).singleton() })
 }
 
 const registerServices = container => {

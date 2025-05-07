@@ -1,5 +1,5 @@
-import Roles from "../auth/roles.js"
-import RoleModel from "./roleModel.js"
+import Roles from '../auth/roles.js'
+import RoleModel from './roleModel.js'
 
 export default class UserModel {
   #id
@@ -11,7 +11,9 @@ export default class UserModel {
   #createdAt
   #updatedAt
 
-  constructor({ id, name, email, password_hash, is_verified, roles, created_at, updated_at }) {
+  constructor({
+    id, name, email, password_hash, is_verified, roles, created_at, updated_at
+  }) {
     this.#id = id
     this.#name = name
     this.#email = email
@@ -23,14 +25,10 @@ export default class UserModel {
       ...(roles ?? [])
     ]
 
-    this.#roles = Array.from(
-      new Map(
-        normalizedRoles.map(role => {
-          const instance = role instanceof RoleModel ? role : new RoleModel({ name: role })
-          return [instance.getName(), instance]
-        })
-      ).values()
-    )
+    this.#roles = Array.from(new Map(normalizedRoles.map(role => {
+      const instance = role instanceof RoleModel ? role : new RoleModel({ name: role })
+      return [ instance.getName(), instance ]
+    })).values())
 
     this.#createdAt = created_at ?? new Date()
     this.#updatedAt = updated_at

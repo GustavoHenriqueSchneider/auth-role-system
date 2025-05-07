@@ -1,6 +1,6 @@
-import RoleModel from "../../domain/model/roleModel.js"
-import UserModel from "../../domain/model/userModel.js"
-import Tables from "../../domain/tables.js"
+import RoleModel from '../../domain/model/roleModel.js'
+import UserModel from '../../domain/model/userModel.js'
+import Tables from '../../domain/tables.js'
 
 export default class UserRepository {
   #knexClient
@@ -28,7 +28,7 @@ export default class UserRepository {
         throw new Error(`Os seguintes cargos não existem: '${missingRoles.join(', ')}'`)
       }
 
-      const [{ userId }] = await trx(Tables.USERS)
+      const [ { userId } ] = await trx(Tables.USERS)
         .insert(user.toDatabaseObject())
         .returning('id as userId')
 
@@ -78,7 +78,7 @@ export default class UserRepository {
   }
 
   existsByEmail = async email => {
-    const [{ count }] = await this.#users()
+    const [ { count } ] = await this.#users()
       .where({ email })
       .count()
 

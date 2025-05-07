@@ -1,5 +1,5 @@
 export default class SendUserPasswordResetEmailResponse {
-    constructor(token) {
-        this.token = token
-    }
+  constructor(token) {
+    this.token = token
+  }
 }

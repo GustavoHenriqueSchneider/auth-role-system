@@ -6,6 +6,6 @@ import buildInfrastructureDependencies from './src/infrastructure/dependencyInje
 export const container = createContainer()
 
 export function setupDependencies() {
-    buildApplicationDependencies(container)
-    buildInfrastructureDependencies(container)
+  buildApplicationDependencies(container)
+  buildInfrastructureDependencies(container)
 }

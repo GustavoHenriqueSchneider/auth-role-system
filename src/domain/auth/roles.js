@@ -3,6 +3,6 @@ export default class Roles {
   static USER = 'user'
 
   static isValidRole = role => Object.entries(Roles)
-    .filter(([key, value]) => typeof value === 'string')
-    .some(([_, value]) => value === role)
+    .filter(([ key, value ]) => typeof value === 'string')
+    .some(([ _, value ]) => value === role)
 }

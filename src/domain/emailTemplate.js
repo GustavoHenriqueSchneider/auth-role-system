@@ -3,7 +3,7 @@ export default class EmailTemplate {
   static PASSWORD_RESET = 'password-reset'
 
   static #templates = {
-    'email-verification': ({code}) => ({
+    'email-verification': ({ code }) => ({
       subject: 'Confirmação de E-mail',
       html: `
           <h1>Bem-vindo!</h1>
@@ -12,7 +12,7 @@ export default class EmailTemplate {
           <p>Se você não solicitou isso, ignore este e-mail.</p>
         `
     }),
-    'password-reset': ({code}) => ({
+    'password-reset': ({ code }) => ({
       subject: 'Redefinição de Senha',
       html: `
           <p>Recebemos uma solicitação para redefinir sua senha.</p>

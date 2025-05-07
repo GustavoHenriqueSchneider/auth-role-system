@@ -1,12 +1,12 @@
 export default class ConfirmUserEmailCommand {
-    #email
-    #code
+  #email
+  #code
 
-    constructor({ email, code }) {
-        this.#email = email
-        this.#code = code
-    }
+  constructor({ email, code }) {
+    this.#email = email
+    this.#code = code
+  }
 
-    getEmail = () => this.#email
-    getCode = () => this.#code
+  getEmail = () => this.#email
+  getCode = () => this.#code
 }

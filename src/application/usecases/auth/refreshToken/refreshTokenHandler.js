@@ -1,17 +1,19 @@
-import JwtPayload from "../../../../domain/auth/jwtPayload.js"
-import TokenTypes from "../../../../domain/auth/tokenTypes.js"
-import RedisKeys from "../../../../domain/redisKeys.js"
-import BadRequestException from "../../../../webapi/exceptions/badRequestException.js"
-import ForbiddenException from "../../../../webapi/exceptions/forbiddenException.js"
-import UnauthorizedException from "../../../../webapi/exceptions/unauthorizedException.js"
-import RefreshTokenResponse from "./refreshTokenResponse.js"
+import JwtPayload from '../../../../domain/auth/jwtPayload.js'
+import TokenTypes from '../../../../domain/auth/tokenTypes.js'
+import RedisKeys from '../../../../domain/redisKeys.js'
+import BadRequestException from '../../../../webapi/exceptions/badRequestException.js'
+import ForbiddenException from '../../../../webapi/exceptions/forbiddenException.js'
+import UnauthorizedException from '../../../../webapi/exceptions/unauthorizedException.js'
+import RefreshTokenResponse from './refreshTokenResponse.js'
 
 export default class RefreshTokenHandler {
   #userRepository
   #jwtService
   #redisService
 
-  constructor({ userRepository, jwtService, redisService }) {
+  constructor({
+    userRepository, jwtService, redisService
+  }) {
     this.#userRepository = userRepository
     this.#jwtService = jwtService
     this.#redisService = redisService
@@ -38,7 +40,7 @@ export default class RefreshTokenHandler {
     }
 
     if (payload.tokenType !== TokenTypes.REFRESH) {
-      throw new ForbiddenException(`O token informado não é do tipo necessário.`)
+      throw new ForbiddenException('O token informado não é do tipo necessário.')
     }
 
     const userId = payload.data.userId

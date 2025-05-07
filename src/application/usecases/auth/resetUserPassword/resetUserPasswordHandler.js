@@ -1,13 +1,15 @@
-import RedisKeys from "../../../../domain/redisKeys.js"
-import BadRequestException from "../../../../webapi/exceptions/badRequestException.js"
-import NotFoundException from "../../../../webapi/exceptions/notFoundException.js"
+import RedisKeys from '../../../../domain/redisKeys.js'
+import BadRequestException from '../../../../webapi/exceptions/badRequestException.js'
+import NotFoundException from '../../../../webapi/exceptions/notFoundException.js'
 
 export default class ResetUserPasswordHandler {
   #userRepository
   #passwordHasherService
   #redisService
 
-  constructor({ userRepository, passwordHasherService, redisService }) {
+  constructor({
+    userRepository, passwordHasherService, redisService
+  }) {
     this.#userRepository = userRepository
     this.#passwordHasherService = passwordHasherService
     this.#redisService = redisService

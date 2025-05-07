@@ -1,9 +1,9 @@
 export default class LogoutUserCommand {
-    #userId
-    
-    constructor({ userId }) {
-        this.#userId = userId
-    }
+  #userId
 
-    getUserId = () => this.#userId
+  constructor({ userId }) {
+    this.#userId = userId
+  }
+
+  getUserId = () => this.#userId
 }
