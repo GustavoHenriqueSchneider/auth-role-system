@@ -26,7 +26,7 @@ export default class RegisterUserHandler {
 
   handle = async command => {
     const email = command.getEmail()
-    const userExists = await this.#userRepository.existsByEmail(email)
+    const userExists = await this.#userRepository.existsUserByEmail(email)
 
     if (userExists) {
       throw new AlreadyExistsException('Um usuário com esse email já existe.')

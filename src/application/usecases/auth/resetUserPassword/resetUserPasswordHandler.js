@@ -30,8 +30,8 @@ export default class ResetUserPasswordHandler {
       throw new BadRequestException('Código de reset de senha incorreto/inválido.')
     }
 
-    const passwordHash = await this.#passwordHasherService.hash(command.getPassword())
-    user.setPasswordHash(passwordHash)
+    const newPasswordHash = await this.#passwordHasherService.hash(command.getPassword())
+    user.setPasswordHash(newPasswordHash)
 
     await this.#userRepository.updateUser(user)
     await this.#redisService.deleteData(key)

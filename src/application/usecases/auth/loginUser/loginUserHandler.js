@@ -22,7 +22,7 @@ export default class LoginUserHandler {
   handle = async command => {
     const email = command.getEmail()
     const user = await this.#userRepository.getUserByEmail(email)
-    const unauthorizedExceptionMessage = 'E-mail ou senha inválidos.'
+    const unauthorizedExceptionMessage = 'Email ou senha inválidos.'
 
     if (user === null) {
       throw new UnauthorizedException(unauthorizedExceptionMessage)

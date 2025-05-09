@@ -9,7 +9,11 @@ import ResendUserEmailConfirmationHandler from './usecases/auth/resendUserEmailC
 import ResetUserPasswordHandler from './usecases/auth/resetUserPassword/resetUserPasswordHandler.js'
 import SendUserPasswordResetEmailHandler from './usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailHandler.js'
 
-export default container => {
+import CreateRoleHandler from './usecases/role/createRole/createRoleHandler.js'
+import DeleteRoleByIdHandler from './usecases/role/deleteRoleById/deleteRoleByIdHandler.js'
+import UpdateRoleByIdHandler from './usecases/role/updateRoleById/updateRoleByIdHandler.js'
+
+const registerAuthUseCases = container => {
   container.register({
     confirmUserEmailHandler: asClass(ConfirmUserEmailHandler).scoped(),
     loginUserHandler: asClass(LoginUserHandler).scoped(),
@@ -20,4 +24,28 @@ export default container => {
     resetUserPasswordHandler: asClass(ResetUserPasswordHandler).scoped(),
     sendUserPasswordResetEmailHandler: asClass(SendUserPasswordResetEmailHandler).scoped()
   })
+}
+
+const registerLogUseCases = container => {
+  container.register({})
+}
+
+const registerRoleUseCases = container => {
+  container.register({
+    createRoleHandler: asClass(CreateRoleHandler).scoped(),
+    //
+    deleteRoleByIdHandler: asClass(DeleteRoleByIdHandler).scoped(),
+    updateRoleByIdHandler: asClass(UpdateRoleByIdHandler).scoped()
+  })
+}
+
+const registerUserUseCases = container => {
+  container.register({})
+}
+
+export default container => {
+  registerAuthUseCases(container)
+  registerLogUseCases(container)
+  registerRoleUseCases(container)
+  registerUserUseCases(container)
 }

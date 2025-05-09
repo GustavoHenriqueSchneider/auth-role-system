@@ -1,94 +1,140 @@
+/* eslint-disable function-call-argument-newline */
 import express from 'express'
-import validatorMiddleware from '../middlewares/validatorMiddleware.js'
 
 const router = express.Router()
 
-// router.get('/',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//gu - acesso admin
+// router.get('/:userId',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
 
-// router.get('/search',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
-// router.put('/:id',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+// router.put('/:userId',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
 
-// router.delete('/:id',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
-// router.put('/:id/anonymize',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+// router.delete('/:userId',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
 
-// router.post('/:id/roles',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
-// router.get('/:id/roles',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+// router.put('/:userId/anonymize',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
 
-// router.put('/:id/roles/:roleId',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
+
+// router.post('/:userId/roles',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
+
+//nathan - acesso admin
+// router.get('/:userId/roles',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
+
+// router.put('/:userId/roles/:roleId',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
+
+// router.get('/me',
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
 // router.put('/me',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
 // router.delete('/me',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
 // router.put('/me/anonymize',
-//     validatorMiddleware(RegisterUserCommand, registerUserValidator),
-//     async (req, res, next) => {
-//         const response = await registerUserHandler(req.command)
-//         res.status(201).send(response)
-//     }
-// )
+//     validatorMiddleware(Command, Validator),
+//     asyncHandlerMiddleware(async (req, res, next) => {
+//         const response = await req.container
+//         await req.container
+//             .resolve('Handler')
+//             .handle(req.command)
+
+//         res.status(*).json(response)
+//         res.status(*).send()
+//     }))
 
 export default router

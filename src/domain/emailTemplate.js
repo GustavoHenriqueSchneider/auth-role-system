@@ -4,12 +4,12 @@ export default class EmailTemplate {
 
   static #templates = {
     'email-verification': ({ code }) => ({
-      subject: 'Confirmação de E-mail',
+      subject: 'Confirmação de Email',
       html: `
           <h1>Bem-vindo!</h1>
-          <p>Use o código abaixo para confirmar seu e-mail:</p>
+          <p>Use o código abaixo para confirmar seu email:</p>
           <h2>${code}</h2>
-          <p>Se você não solicitou isso, ignore este e-mail.</p>
+          <p>Se você não solicitou isso, ignore este email.</p>
         `
     }),
     'password-reset': ({ code }) => ({
@@ -18,7 +18,7 @@ export default class EmailTemplate {
           <p>Recebemos uma solicitação para redefinir sua senha.</p>
           <p>Use o código abaixo para confirmar:</p>
           <h2>${code}</h2>
-          <p>Se você não solicitou isso, ignore este e-mail.</p>
+          <p>Se você não solicitou isso, ignore este email.</p>
         `
     })
   }

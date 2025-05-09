@@ -77,7 +77,7 @@ export default class UserRepository {
     return this.#getUserByParams({ id: userId })
   }
 
-  existsByEmail = async email => {
+  existsUserByEmail = async email => {
     const [ { count } ] = await this.#users()
       .where({ email })
       .count()
@@ -85,17 +85,11 @@ export default class UserRepository {
     return Number(count) > 0
   }
 
-  deleteUserById = async userId => {
-    return await this.#users()
-      .where({ id: userId })
-      .del()
-  }
-
   updateUser = async user => {
     const userDto = user.toDatabaseObject()
     userDto.updated_at = new Date()
 
-    return await this.#users()
+    await this.#users()
       .where({ id: user.getId() })
       .update(userDto)
   }

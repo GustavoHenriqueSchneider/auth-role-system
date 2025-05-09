@@ -10,7 +10,7 @@ export default class EmailService {
   sendEmail = async (emailAddress, templateType, params = {}) => {
     try {
       if (!EmailTemplate.isValidTemplate(templateType)) {
-        throw new Error(`Template de e-mail desconhecido: ${templateType}`)
+        throw new Error(`Template de email desconhecido: ${templateType}`)
       }
 
       await this.#smtpClient.sendMail({

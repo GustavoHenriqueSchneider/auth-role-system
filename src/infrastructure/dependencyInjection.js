@@ -4,7 +4,9 @@ import knexClient from './clients/knexClient.js'
 import redisClient from './clients/redisClient.js'
 import smtpClient from './clients/smtpClient.js'
 
+import RoleRepository from './repositories/roleRepository.js'
 import UserRepository from './repositories/userRepository.js'
+import UserRolesRepository from './repositories/userRolesRepository.js'
 
 import EmailService from './services/emailService.js'
 import JwtService from './services/jwtService.js'
@@ -20,7 +22,11 @@ const registerClients = container => {
 }
 
 const registerRepositories = container => {
-  container.register({ userRepository: asClass(UserRepository).singleton() })
+  container.register({
+    roleRepository: asClass(RoleRepository).singleton(),
+    userRepository: asClass(UserRepository).singleton(),
+    userRolesRepository: asClass(UserRolesRepository).singleton()
+  })
 }
 
 const registerServices = container => {
