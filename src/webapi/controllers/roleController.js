@@ -47,9 +47,9 @@ const router = express.Router()
  *                 roleId:
  *                   type: number
  */
-router.post('/', 
-  authMiddleware({ role: Roles.ADMIN }), 
-  validatorMiddleware(CreateRoleCommand, createRoleValidator), 
+router.post('/',
+  authMiddleware({ role: Roles.ADMIN }),
+  validatorMiddleware(CreateRoleCommand, createRoleValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('createRoleHandler')
@@ -78,13 +78,13 @@ router.post('/',
  *         description: Cargo excluído com sucesso
  */
 
-router.delete('/:roleId', 
-  authMiddleware({ role: Roles.ADMIN }), 
+router.delete('/:roleId',
+  authMiddleware({ role: Roles.ADMIN }),
   asyncHandlerMiddleware(async (req, res, next) => {
     req.body.roleId = req.params.roleId
     next()
-  }), 
-  validatorMiddleware(DeleteRoleByIdCommand, deleteRoleByIdValidator), 
+  }),
+  validatorMiddleware(DeleteRoleByIdCommand, deleteRoleByIdValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('deleteRoleByIdHandler')
@@ -135,13 +135,13 @@ router.delete('/:roleId',
  *       204:
  *         description: Cargo atualizado com sucesso
  */
-router.put('/:roleId', 
-  authMiddleware({ role: Roles.ADMIN }), 
+router.put('/:roleId',
+  authMiddleware({ role: Roles.ADMIN }),
   asyncHandlerMiddleware(async (req, res, next) => {
     req.body.roleId = req.params.roleId
     next()
-  }), 
-  validatorMiddleware(UpdateRoleByIdCommand, updateRoleByIdValidator), 
+  }),
+  validatorMiddleware(UpdateRoleByIdCommand, updateRoleByIdValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('updateRoleByIdHandler')

@@ -49,13 +49,13 @@ const router = express.Router()
  *       204:
  *         description: Email de usuário confirmado com sucesso
  */
-router.post('/email/validate', 
-  authMiddleware({ step: Steps.EMAIL_VERIFICATION }), 
+router.post('/email/validate',
+  authMiddleware({ step: Steps.EMAIL_VERIFICATION }),
   asyncHandlerMiddleware(async (req, res, next) => {
     req.body.email = req.user.email
     next()
-  }), 
-  validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator), 
+  }),
+  validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('confirmUserEmailHandler')
@@ -95,8 +95,8 @@ router.post('/email/validate',
  *                 refreshToken:
  *                   type: string
  */
-router.post('/login', 
-  validatorMiddleware(LoginUserCommand, loginUserValidator), 
+router.post('/login',
+  validatorMiddleware(LoginUserCommand, loginUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('loginUserHandler')
@@ -117,13 +117,13 @@ router.post('/login',
  *       204:
  *         description: Logout realizado com sucesso
  */
-router.post('/logout', 
-  authMiddleware({ role: Roles.USER }), 
+router.post('/logout',
+  authMiddleware({ role: Roles.USER }),
   asyncHandlerMiddleware(async (req, res, next) => {
     req.body.userId = req.user.userId
     next()
-  }), 
-  validatorMiddleware(LogoutUserCommand, logoutUserValidator), 
+  }),
+  validatorMiddleware(LogoutUserCommand, logoutUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('logoutUserHandler')
@@ -161,8 +161,8 @@ router.post('/logout',
  *                 refreshToken:
  *                   type: string
  */
-router.post('/refresh', 
-  validatorMiddleware(RefreshTokenCommand, refreshTokenValidator), 
+router.post('/refresh',
+  validatorMiddleware(RefreshTokenCommand, refreshTokenValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('refreshTokenHandler')
@@ -202,8 +202,8 @@ router.post('/refresh',
  *                 token:
  *                   type: string
  */
-router.post('/register', 
-  validatorMiddleware(RegisterUserCommand, registerUserValidator), 
+router.post('/register',
+  validatorMiddleware(RegisterUserCommand, registerUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('registerUserHandler')
@@ -239,8 +239,8 @@ router.post('/register',
  *                 token:
  *                   type: string
  */
-router.post('/email/resend-confirmation', 
-  validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator), 
+router.post('/email/resend-confirmation',
+  validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('resendUserEmailConfirmationHandler')
@@ -273,13 +273,13 @@ router.post('/email/resend-confirmation',
  *       204:
  *         description: Senha redefinida com sucesso
  */
-router.post('/reset-password/confirm', 
-  authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }), 
+router.post('/reset-password/confirm',
+  authMiddleware({ step: Steps.RESET_PASSWORD_VERIFICATION }),
   asyncHandlerMiddleware(async (req, res, next) => {
     req.body.email = req.user.email
     next()
-  }), 
-  validatorMiddleware(ResetUserPasswordCommand, resetUserPasswordValidator), 
+  }),
+  validatorMiddleware(ResetUserPasswordCommand, resetUserPasswordValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('resetUserPasswordHandler')
@@ -315,8 +315,8 @@ router.post('/reset-password/confirm',
  *                 token:
  *                   type: string
  */
-router.post('/reset-password', 
-  validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator), 
+router.post('/reset-password',
+  validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('sendUserPasswordResetEmailHandler')
