@@ -7,7 +7,12 @@ export default (Request, validator) => async (req, res, next) => {
     const result = validationResult(req)
 
     if (!result.isEmpty()) {
-      return next(new BadRequestException('Erro de validação.', { details: result.array() }))
+      const formattedDetails = result.array().reduce((acc, curr) => {
+        acc[curr.path] = curr.msg
+        return acc
+      }, {})
+
+      return next(new BadRequestException('Erro de validação.', { details: formattedDetails }))
     }
 
     req.command = new Request(req.body)
