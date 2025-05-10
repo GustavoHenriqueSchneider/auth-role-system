@@ -11,8 +11,8 @@ import CreateRoleCommand from '../../application/usecases/role/createRole/create
 import CreateRoleValidator from '../../application/usecases/role/createRole/createRoleValidator.js'
 import DeleteRoleByIdCommand from '../../application/usecases/role/deleteRoleById/deleteRoleByIdCommand.js'
 import DeleteRoleByIdValidator from '../../application/usecases/role/deleteRoleById/deleteRoleByIdValidator.js'
-//
-//
+import GetRoleByIdQuery from '../../application/usecases/role/getRoleById/getRoleByIdQuery.js'
+import GetRoleByIdValidator from '../../application/usecases/role/getRoleById/getRoleByIdValidator.js'
 import UpdateRoleByIdCommand from '../../application/usecases/role/updateRoleById/updateRoleByIdCommand.js'
 import UpdateRoleByIdValidator from '../../application/usecases/role/updateRoleById/updateRoleByIdValidator.js'
 
@@ -93,18 +93,46 @@ router.delete('/:roleId',
     res.status(204).send()
   }))
 
-//werek - acesso admin - getRoleById
-// router.get('/:roleId',
-//     validatorMiddleware(Command, Validator),
-//     asyncHandlerMiddleware(async (req, res, next) => {
-//         const response = await req.container
-//         await req.container
-//             .resolve('Handler')
-//             .handle(req.command)
+/**
+ * @swagger
+ * /roles/{roleId}:
+ *   get:
+ *     summary: Retorna os dados de um cargo específico
+ *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: roleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do cargo
+ *     responses:
+ *       200:
+ *         description: Dados do cargo retornados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ */
+router.get('/:roleId',
+  authMiddleware({ role: Roles.ADMIN }),
+  asyncHandlerMiddleware(async (req, res, next) => {
+    req.body.roleId = req.params.roleId
+    next()
+  }),
+  validatorMiddleware(GetRoleByIdQuery, GetRoleByIdValidator),
+  asyncHandlerMiddleware(async (req, res, next) => {
+    const response = await req.container
+      .resolve('getRoleByIdHandler')
+      .handle(req.command)
 
-//         res.status(*).json(response)
-//         res.status(*).send()
-//     }))
+    res.status(200).json(response)
+  }))
 
 /**
  * @swagger

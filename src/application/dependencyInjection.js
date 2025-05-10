@@ -10,8 +10,8 @@ import ResetUserPasswordHandler from './usecases/auth/resetUserPassword/resetUse
 import SendUserPasswordResetEmailHandler from './usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailHandler.js'
 
 import CreateRoleHandler from './usecases/role/createRole/createRoleHandler.js'
-//
 import DeleteRoleByIdHandler from './usecases/role/deleteRoleById/deleteRoleByIdHandler.js'
+import GetRoleByIdHandler from './usecases/role/getRoleById/getRoleByIdHandler.js'
 import UpdateRoleByIdHandler from './usecases/role/updateRoleById/updateRoleByIdHandler.js'
 
 import GetUserByIdHandler from './usecases/user/getUserById/getUserByIdHandler.js'
@@ -37,8 +37,8 @@ const registerLogUseCases = container => {
 const registerRoleUseCases = container => {
   container.register({
     createRoleHandler: asClass(CreateRoleHandler).scoped(),
-    //
     deleteRoleByIdHandler: asClass(DeleteRoleByIdHandler).scoped(),
+    getRoleByIdHandler: asClass(GetRoleByIdHandler).scoped(),
     updateRoleByIdHandler: asClass(UpdateRoleByIdHandler).scoped()
   })
 }
