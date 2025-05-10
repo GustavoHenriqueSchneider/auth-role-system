@@ -39,7 +39,10 @@ export default class UserModel {
   getEmail = () => this.#email
   getPasswordHash = () => this.#passwordHash
   getRoles = () => Object.freeze(this.#roles.map(role => role.getName()))
+  getCreatedAt = () => this.#createdAt
+  getUpdatedAt = () => this.#updatedAt
 
+  setName = name => this.#name = name
   setPasswordHash = passwordHash => this.#passwordHash = passwordHash
 
   hasRole = role => this.#roles.some(r => r.getName() === role)

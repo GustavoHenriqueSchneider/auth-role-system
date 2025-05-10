@@ -20,8 +20,9 @@ const app = express()
 app.use(express.json())
 app.use(scopePerRequest(container))
 
+const applicationUrl = `http://localhost:${process.env.APPLICATION_PORT}`
 const documentationRoute = '/docs'
-const documentationUrl = `http://localhost:${process.env.APPLICATION_PORT}${documentationRoute}`
+const documentationUrl = `${applicationUrl}${documentationRoute}`
 
 const swaggerOptions = {
   definition: {
@@ -32,7 +33,7 @@ const swaggerOptions = {
       description: 'Documentação da API de autenticação e gerenciamento de usuários'
     },
     servers: [
-      { url: documentationUrl }
+      { url: applicationUrl }
     ],
     components: {
       securitySchemes: {

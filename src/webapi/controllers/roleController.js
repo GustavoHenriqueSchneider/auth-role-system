@@ -8,13 +8,13 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 import validatorMiddleware from '../middlewares/validatorMiddleware.js'
 
 import CreateRoleCommand from '../../application/usecases/role/createRole/createRoleCommand.js'
-import createRoleValidator from '../../application/usecases/role/createRole/createRoleValidator.js'
+import CreateRoleValidator from '../../application/usecases/role/createRole/createRoleValidator.js'
 import DeleteRoleByIdCommand from '../../application/usecases/role/deleteRoleById/deleteRoleByIdCommand.js'
-import deleteRoleByIdValidator from '../../application/usecases/role/deleteRoleById/deleteRoleByIdValidator.js'
+import DeleteRoleByIdValidator from '../../application/usecases/role/deleteRoleById/deleteRoleByIdValidator.js'
 //
 //
 import UpdateRoleByIdCommand from '../../application/usecases/role/updateRoleById/updateRoleByIdCommand.js'
-import updateRoleByIdValidator from '../../application/usecases/role/updateRoleById/updateRoleByIdValidator.js'
+import UpdateRoleByIdValidator from '../../application/usecases/role/updateRoleById/updateRoleByIdValidator.js'
 
 const router = express.Router()
 
@@ -49,7 +49,7 @@ const router = express.Router()
  */
 router.post('/',
   authMiddleware({ role: Roles.ADMIN }),
-  validatorMiddleware(CreateRoleCommand, createRoleValidator),
+  validatorMiddleware(CreateRoleCommand, CreateRoleValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('createRoleHandler')
@@ -84,7 +84,7 @@ router.delete('/:roleId',
     req.body.roleId = req.params.roleId
     next()
   }),
-  validatorMiddleware(DeleteRoleByIdCommand, deleteRoleByIdValidator),
+  validatorMiddleware(DeleteRoleByIdCommand, DeleteRoleByIdValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('deleteRoleByIdHandler')
@@ -141,7 +141,7 @@ router.put('/:roleId',
     req.body.roleId = req.params.roleId
     next()
   }),
-  validatorMiddleware(UpdateRoleByIdCommand, updateRoleByIdValidator),
+  validatorMiddleware(UpdateRoleByIdCommand, UpdateRoleByIdValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('updateRoleByIdHandler')

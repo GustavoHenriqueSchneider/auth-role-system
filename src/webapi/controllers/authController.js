@@ -9,21 +9,21 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 import validatorMiddleware from '../middlewares/validatorMiddleware.js'
 
 import ConfirmUserEmailCommand from '../../application/usecases/auth/confirmUserEmail/confirmUserEmailCommand.js'
-import confirmUserEmailValidator from '../../application/usecases/auth/confirmUserEmail/confirmUserEmailValidator.js'
+import ConfirmUserEmailValidator from '../../application/usecases/auth/confirmUserEmail/confirmUserEmailValidator.js'
 import LoginUserCommand from '../../application/usecases/auth/loginUser/loginUserCommand.js'
-import loginUserValidator from '../../application/usecases/auth/loginUser/loginUserValidator.js'
+import LoginUserValidator from '../../application/usecases/auth/loginUser/loginUserValidator.js'
 import LogoutUserCommand from '../../application/usecases/auth/logoutUser/logoutUserCommand.js'
-import logoutUserValidator from '../../application/usecases/auth/logoutUser/logoutUserValidator.js'
+import LogoutUserValidator from '../../application/usecases/auth/logoutUser/logoutUserValidator.js'
 import RefreshTokenCommand from '../../application/usecases/auth/refreshToken/refreshTokenCommand.js'
-import refreshTokenValidator from '../../application/usecases/auth/refreshToken/refreshTokenValidator.js'
+import RefreshTokenValidator from '../../application/usecases/auth/refreshToken/refreshTokenValidator.js'
 import RegisterUserCommand from '../../application/usecases/auth/registerUser/registerUserCommand.js'
-import registerUserValidator from '../../application/usecases/auth/registerUser/registerUserValidator.js'
+import RegisterUserValidator from '../../application/usecases/auth/registerUser/registerUserValidator.js'
 import ResendUserEmailConfirmationCommand from '../../application/usecases/auth/resendUserEmailConfirmation/resendUserEmailConfirmationCommand.js'
-import resendUserEmailConfirmationValidator from '../../application/usecases/auth/resendUserEmailConfirmation/resendUserEmailConfirmationValidator.js'
+import ResendUserEmailConfirmationValidator from '../../application/usecases/auth/resendUserEmailConfirmation/resendUserEmailConfirmationValidator.js'
 import ResetUserPasswordCommand from '../../application/usecases/auth/resetUserPassword/resetUserPasswordCommand.js'
-import resetUserPasswordValidator from '../../application/usecases/auth/resetUserPassword/resetUserPasswordValidator.js'
+import ResetUserPasswordValidator from '../../application/usecases/auth/resetUserPassword/resetUserPasswordValidator.js'
 import SendUserPasswordResetEmailCommand from '../../application/usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailCommand.js'
-import sendUserPasswordResetEmailValidator from '../../application/usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailValidator.js'
+import SendUserPasswordResetEmailValidator from '../../application/usecases/auth/sendUserPasswordResetEmail/sendUserPasswordResetEmailValidator.js'
 
 const router = express.Router()
 
@@ -55,7 +55,7 @@ router.post('/email/validate',
     req.body.email = req.user.email
     next()
   }),
-  validatorMiddleware(ConfirmUserEmailCommand, confirmUserEmailValidator),
+  validatorMiddleware(ConfirmUserEmailCommand, ConfirmUserEmailValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('confirmUserEmailHandler')
@@ -96,7 +96,7 @@ router.post('/email/validate',
  *                   type: string
  */
 router.post('/login',
-  validatorMiddleware(LoginUserCommand, loginUserValidator),
+  validatorMiddleware(LoginUserCommand, LoginUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('loginUserHandler')
@@ -123,7 +123,7 @@ router.post('/logout',
     req.body.userId = req.user.userId
     next()
   }),
-  validatorMiddleware(LogoutUserCommand, logoutUserValidator),
+  validatorMiddleware(LogoutUserCommand, LogoutUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('logoutUserHandler')
@@ -162,7 +162,7 @@ router.post('/logout',
  *                   type: string
  */
 router.post('/refresh',
-  validatorMiddleware(RefreshTokenCommand, refreshTokenValidator),
+  validatorMiddleware(RefreshTokenCommand, RefreshTokenValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('refreshTokenHandler')
@@ -203,7 +203,7 @@ router.post('/refresh',
  *                   type: string
  */
 router.post('/register',
-  validatorMiddleware(RegisterUserCommand, registerUserValidator),
+  validatorMiddleware(RegisterUserCommand, RegisterUserValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('registerUserHandler')
@@ -240,7 +240,7 @@ router.post('/register',
  *                   type: string
  */
 router.post('/email/resend-confirmation',
-  validatorMiddleware(ResendUserEmailConfirmationCommand, resendUserEmailConfirmationValidator),
+  validatorMiddleware(ResendUserEmailConfirmationCommand, ResendUserEmailConfirmationValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('resendUserEmailConfirmationHandler')
@@ -279,7 +279,7 @@ router.post('/reset-password/confirm',
     req.body.email = req.user.email
     next()
   }),
-  validatorMiddleware(ResetUserPasswordCommand, resetUserPasswordValidator),
+  validatorMiddleware(ResetUserPasswordCommand, ResetUserPasswordValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     await req.container
       .resolve('resetUserPasswordHandler')
@@ -316,7 +316,7 @@ router.post('/reset-password/confirm',
  *                   type: string
  */
 router.post('/reset-password',
-  validatorMiddleware(SendUserPasswordResetEmailCommand, sendUserPasswordResetEmailValidator),
+  validatorMiddleware(SendUserPasswordResetEmailCommand, SendUserPasswordResetEmailValidator),
   asyncHandlerMiddleware(async (req, res, next) => {
     const response = await req.container
       .resolve('sendUserPasswordResetEmailHandler')
