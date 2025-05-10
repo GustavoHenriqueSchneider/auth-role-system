@@ -7,6 +7,8 @@ export default class UserRoleModel {
     this.#roleId = role_id
   }
 
-  getUserId = () => this.#userId
-  getRoleId = () => this.#roleId
+  toDatabaseObject = () => ({
+    user_id: this.#userId,
+    role_id: this.#roleId,
+  })
 }

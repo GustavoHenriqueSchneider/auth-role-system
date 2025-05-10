@@ -11,6 +11,7 @@
     "db:reset-data": "npx knex seed:run --specific=truncate_all.js",
     "db:initial-seed": "npx knex seed:run --specific=seed_initial.js",
     "db:reset": "npm run db:reset-migrations && npm run db:reset-data && npm run db:initial-seed",
+    "db:generate-fake-user": "npx knex seed:run --specific=seed_create_fake_user.js",
     "db:terminal": "docker exec -it postgres-container psql -U auth_user -d auth_db",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.7.0",
     "awilix": "^12.0.5",
     "awilix-express": "^9.0.2",
     "bcrypt": "^5.1.1",

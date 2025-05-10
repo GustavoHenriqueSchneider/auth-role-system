@@ -43,6 +43,7 @@ export default class UserModel {
   getUpdatedAt = () => this.#updatedAt
 
   setName = name => this.#name = name
+  setEmail = email => this.#email = email
   setPasswordHash = passwordHash => this.#passwordHash = passwordHash
 
   hasRole = role => this.#roles.some(r => r.getName() === role)

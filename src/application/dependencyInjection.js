@@ -14,7 +14,16 @@ import DeleteRoleByIdHandler from './usecases/role/deleteRoleById/deleteRoleById
 import GetRoleByIdHandler from './usecases/role/getRoleById/getRoleByIdHandler.js'
 import UpdateRoleByIdHandler from './usecases/role/updateRoleById/updateRoleByIdHandler.js'
 
+import AnonymizeActualUserHandler from './usecases/user/anonymizeActualUser/anonymizeActualUserHandler.js'
+import AnonymizeUserByIdHandler from './usecases/user/anonymizeUserById/anonymizeUserByIdHandler.js'
+import DeleteActualUserHandler from './usecases/user/deleteActualUser/deleteActualUserHandler.js'
+import DeleteUserByIdHandler from './usecases/user/deleteUserById/deleteUserByIdHandler.js'
+import GetActualUserHandler from './usecases/user/getActualUser/getActualUserHandler.js'
+//
 import GetUserByIdHandler from './usecases/user/getUserById/getUserByIdHandler.js'
+import JoinRoleToUserHandler from './usecases/user/joinRoleToUser/joinRoleToUserHandler.js'
+import RemoveRoleFromUserHandler from './usecases/user/removeRoleFromUser/removeRoleFromUserHandler.js'
+import UpdateActualUserHandler from './usecases/user/updateActualUser/updateActualUserHandler.js'
 import UpdateUserByIdHandler from './usecases/user/updateUserById/updateUserByIdHandler.js'
 
 const registerAuthUseCases = container => {
@@ -45,7 +54,16 @@ const registerRoleUseCases = container => {
 
 const registerUserUseCases = container => {
   container.register({
+    anonymizeActualUserHandler: asClass(AnonymizeActualUserHandler).scoped(),
+    anonymizeUserByIdHandler: asClass(AnonymizeUserByIdHandler).scoped(),
+    deleteActualUserHandler: asClass(DeleteActualUserHandler).scoped(),
+    deleteUserByIdHandler: asClass(DeleteUserByIdHandler).scoped(),
+    getActualUserHandler: asClass(GetActualUserHandler).scoped(),
+    //
     getUserByIdHandler: asClass(GetUserByIdHandler).scoped(),
+    joinRoleToUserHandler: asClass(JoinRoleToUserHandler).scoped(),
+    removeRoleFromUserHandler: asClass(RemoveRoleFromUserHandler).scoped(),
+    updateActualUserHandler: asClass(UpdateActualUserHandler).scoped(),
     updateUserByIdHandler: asClass(UpdateUserByIdHandler).scoped()
   })
 }

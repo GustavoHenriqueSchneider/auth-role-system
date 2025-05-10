@@ -93,4 +93,10 @@ export default class UserRepository {
       .where({ id: user.getId() })
       .update(userDto)
   }
+
+  deleteUserById = async userId => {
+    await this.#users()
+      .where({ id: userId })
+      .del()
+  }
 }

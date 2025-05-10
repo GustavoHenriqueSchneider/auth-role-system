@@ -10,6 +10,14 @@ export default class UserRolesRepository {
 
   #userRoles = () => this.#knexClient(Tables.USER_ROLES)
 
+  getUserRoleByIds = async (userId, roleId) => {
+    const userRoleDto = await this.#userRoles()
+      .where({ user_id: userId, role_id: roleId })
+      .first()
+
+    return userRoleDto ? new UserRoleModel({ ...userRoleDto }) : null
+  }
+
   joinUserToRole = async userRole => {
     await this.#userRoles()
       .insert(userRole.toDatabaseObject())
