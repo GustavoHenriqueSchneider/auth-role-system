@@ -19,7 +19,7 @@ import AnonymizeUserByIdHandler from './usecases/user/anonymizeUserById/anonymiz
 import DeleteActualUserHandler from './usecases/user/deleteActualUser/deleteActualUserHandler.js'
 import DeleteUserByIdHandler from './usecases/user/deleteUserById/deleteUserByIdHandler.js'
 import GetActualUserHandler from './usecases/user/getActualUser/getActualUserHandler.js'
-//
+import GetAllUserRolesByIdHandler from './usecases/user/getAllUserRolesById/getAllUserRolesByIdHandler.js'
 import GetUserByIdHandler from './usecases/user/getUserById/getUserByIdHandler.js'
 import JoinRoleToUserHandler from './usecases/user/joinRoleToUser/joinRoleToUserHandler.js'
 import RemoveRoleFromUserHandler from './usecases/user/removeRoleFromUser/removeRoleFromUserHandler.js'
@@ -59,7 +59,7 @@ const registerUserUseCases = container => {
     deleteActualUserHandler: asClass(DeleteActualUserHandler).scoped(),
     deleteUserByIdHandler: asClass(DeleteUserByIdHandler).scoped(),
     getActualUserHandler: asClass(GetActualUserHandler).scoped(),
-    //
+    getAllUserRolesByIdHandler: asClass(GetAllUserRolesByIdHandler).scoped(),
     getUserByIdHandler: asClass(GetUserByIdHandler).scoped(),
     joinRoleToUserHandler: asClass(JoinRoleToUserHandler).scoped(),
     removeRoleFromUserHandler: asClass(RemoveRoleFromUserHandler).scoped(),

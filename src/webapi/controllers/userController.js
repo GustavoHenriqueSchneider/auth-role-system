@@ -17,8 +17,8 @@ import DeleteUserByIdCommand from '../../application/usecases/user/deleteUserByI
 import DeleteUserByIdValidator from '../../application/usecases/user/deleteUserById/deleteUserByIdValidator.js'
 import GetActualUserQuery from '../../application/usecases/user/getActualUser/getActualUserQuery.js'
 import GetActualUserValidator from '../../application/usecases/user/getActualUser/getActualUserValidator.js'
-//
-//
+import GetAllUserRolesByIdQuery from '../../application/usecases/user/getAllUserRolesById/getAllUserRolesByIdQuery.js'
+import GetAllUserRolesByIdValidator from '../../application/usecases/user/getAllUserRolesById/getAllUserRolesByIdValidator.js'
 import GetUserByIdQuery from '../../application/usecases/user/getUserById/getUserByIdQuery.js'
 import GetUserByIdValidator from '../../application/usecases/user/getUserById/getUserByIdValidator.js'
 import JoinRoleToUserCommand from '../../application/usecases/user/joinRoleToUser/joinRoleToUserCommand.js'
@@ -190,18 +190,48 @@ router.get('/me',
     res.status(200).json(response)
   }))
 
-//nathan - acesso admin - getAllUserRolesById
-// router.get('/:userId/roles',
-//     validatorMiddleware(Command, Validator),
-//     asyncHandlerMiddleware(async (req, res, next) => {
-//         const response = await req.container
-//         await req.container
-//             .resolve('Handler')
-//             .handle(req.command)
+/**
+ * @swagger
+ * /users/{userId}/roles:
+ *   get:
+ *     summary: Lista todos os cargos atribuídos a um usuário
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Lista de cargos retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 roles:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ */
+router.get('/:userId/roles',
+  authMiddleware({ role: Roles.ADMIN }),
+  asyncHandlerMiddleware(async (req, res, next) => {
+    req.body.userId = req.params.userId
+    next()
+  }),
+  validatorMiddleware(GetAllUserRolesByIdQuery, GetAllUserRolesByIdValidator),
+  asyncHandlerMiddleware(async (req, res, next) => {
+    const response = await req.container
+      .resolve('getAllUserRolesByIdHandler')
+      .handle(req.command)
 
-//         res.status(*).json(response)
-//         res.status(*).send()
-//     }))
+    res.status(200).json(response)
+  }))
 
 /**
  * @swagger

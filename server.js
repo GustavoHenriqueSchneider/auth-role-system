@@ -9,7 +9,6 @@ import { setupDependencies, container } from './dependencyInjection.js'
 import errorHandlerMiddleware from './src/webapi/middlewares/errorHandlerMiddleware.js'
 
 import authController from './src/webapi/controllers/authController.js'
-import logController from './src/webapi/controllers/logController.js'
 import roleController from './src/webapi/controllers/roleController.js'
 import userController from './src/webapi/controllers/userController.js'
 
@@ -54,7 +53,6 @@ app.use(documentationRoute, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // CONTROLLERs
 app.use('/auth', authController)
-app.use('/logs', logController)
 app.use('/roles', roleController)
 app.use('/users', userController)
 
@@ -62,5 +60,3 @@ app.use(errorHandlerMiddleware)
 
 app.listen(process.env.APPLICATION_PORT, () =>
   console.log(`Aplicação em execução. Documentação disponível em: ${documentationUrl}`))
-
-// TODO: criar docker-compose com elasticsearch
