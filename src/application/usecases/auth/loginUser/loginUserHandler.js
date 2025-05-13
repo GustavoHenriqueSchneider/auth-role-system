@@ -1,22 +1,24 @@
 import JwtPayload from '../../../../domain/auth/jwtPayload.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
 import LoginUserResponse from './loginUserResponse.js'
-import UnauthorizedException from '../../../../webapi/exceptions/unauthorizedException.js'
-import BadRequestException from '../../../../webapi/exceptions/badRequestException.js'
+import UnauthorizedException from '../../../exceptions/unauthorizedException.js'
+import BadRequestException from '../../../exceptions/badRequestException.js'
 
 export default class LoginUserHandler {
   #userRepository
-  #jwtService
-  #passwordHasherService
   #cacheService
+  #jwtService
+  #loggerService
+  #passwordHasherService
 
   constructor({
-    userRepository, jwtService, passwordHasherService, cacheService
+    userRepository, cacheService, jwtService, loggerService, passwordHasherService
   }) {
     this.#userRepository = userRepository
-    this.#jwtService = jwtService
-    this.#passwordHasherService = passwordHasherService
     this.#cacheService = cacheService
+    this.#jwtService = jwtService
+    this.#loggerService = loggerService
+    this.#passwordHasherService = passwordHasherService
   }
 
   handle = async command => {
@@ -25,16 +27,19 @@ export default class LoginUserHandler {
     const unauthorizedExceptionMessage = 'Email ou senha inválidos.'
 
     if (user === null) {
+      await this.#loggerService.logError('Usuário não encontrado.')
       throw new UnauthorizedException(unauthorizedExceptionMessage)
     }
 
     const isWrongPassword = !await this.#passwordHasherService.compare(command.getPassword(), user.getPasswordHash())
 
     if (isWrongPassword) {
+      await this.#loggerService.logError('Tentativa inválida de login.')
       throw new UnauthorizedException(unauthorizedExceptionMessage)
     }
 
     if (!user.isVerified()) {
+      await this.#loggerService.logError('Tentativa inválida de login para usuário com email não confirmado.')
       throw new BadRequestException('Esse usuário ainda não teve seu email confirmado.')
     }
 
@@ -50,6 +55,7 @@ export default class LoginUserHandler {
     const refreshToken = await this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
     await this.#cacheService.setData(key, refreshToken, { expiration: 604800 })
 
+    await this.#loggerService.log('Login realizado.')
     return new LoginUserResponse(accessToken, refreshToken)
   }
 }

@@ -5,23 +5,25 @@ import EmailTemplate from '../../../../domain/emailTemplate.js'
 import RedisKeys from '../../../../domain/redisKeys.js'
 import TokenGeneratorService from '../../../services/tokenGeneratorService.js'
 import RegisterUserResponse from './registerUserResponse.js'
-import AlreadyExistsException from '../../../../webapi/exceptions/alreadyExistsException.js'
+import AlreadyExistsException from '../../../exceptions/alreadyExistsException.js'
 
 export default class RegisterUserHandler {
   #userRepository
+  #cacheService
   #emailService
   #jwtService
+  #loggerService
   #passwordHasherService
-  #cacheService
 
   constructor({
-    userRepository, emailService, jwtService, passwordHasherService, cacheService
+    userRepository, cacheService, emailService, jwtService, loggerService, passwordHasherService
   }) {
     this.#userRepository = userRepository
+    this.#cacheService = cacheService
     this.#emailService = emailService
     this.#jwtService = jwtService
+    this.#loggerService = loggerService
     this.#passwordHasherService = passwordHasherService
-    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -29,6 +31,7 @@ export default class RegisterUserHandler {
     const userExists = await this.#userRepository.existsUserByEmail(email)
 
     if (userExists) {
+      await this.#loggerService.logError('Tentativa inválida de recriar usuário.')
       throw new AlreadyExistsException('Um usuário com esse email já existe.')
     }
 
@@ -45,6 +48,8 @@ export default class RegisterUserHandler {
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
     const token = await this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
+
+    await this.#loggerService.log('Usuário criado.')
     return new RegisterUserResponse(token)
   }
 }

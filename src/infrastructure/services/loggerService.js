@@ -1,4 +1,5 @@
-import LogTypes from "../../domain/logTypes"
+import LogTypes from '../../domain/logTypes.js'
+import session from '../../../namespace.js'
 
 export default class LoggerService {
   #elasticSearchClient
@@ -23,10 +24,12 @@ export default class LoggerService {
     }
   }
 
-  log = async ({ level = 'info', message }) => {
+  log = async ({
+    index = LogTypes.APPLICATION, level = 'info', message
+  }) => {
     try {
       await this.#elasticSearchClient.index({
-        index: LogTypes.APPLICATION,
+        index,
         document: {
           timestamp: new Date().toISOString(),
           level,
@@ -36,26 +39,26 @@ export default class LoggerService {
       })
     } catch (error) {
 
-      console.error(`Erro ao criar log no elastic-search`)
+      console.error('Erro ao criar log no elastic-search')
       throw error
     }
   }
 
   logError = async message => {
-    await this.log({ level: LogTypes.ERROR, message })
+    await this.log({
+      index: LogTypes.ERROR, level: 'error', message
+    })
   }
 
-  deleteLogsByUserId = async (userId) => {
+  deleteLogsByUserId = async userId => {
     try {
       await this.#elasticSearchClient.deleteByQuery({
         index: LogTypes.APPLICATION,
-        query: {
-          match: { 'metadata.userId': userId }
-        }
+        query: { match: { 'metadata.userId': userId } }
       })
     } catch (error) {
 
-      console.error(`Erro ao deletar logs no elastic-search`)
+      console.error('Erro ao deletar logs no elastic-search')
       throw error
     }
   }
@@ -78,13 +81,11 @@ export default class LoggerService {
             email: anonymousData.email
           }
         },
-        query: {
-          match: { 'metadata.userId': userId }
-        }
+        query: { match: { 'metadata.userId': userId } }
       })
     } catch (error) {
 
-      console.error(`Erro ao anonimizar logs no elastic-search`)
+      console.error('Erro ao anonimizar logs no elastic-search')
       throw error
     }
   }

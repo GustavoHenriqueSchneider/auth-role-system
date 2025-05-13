@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 
 export default class PasswordHasherService {
   #loggerService
-  
+
   constructor({ loggerService }) {
     this.#loggerService = loggerService
   }

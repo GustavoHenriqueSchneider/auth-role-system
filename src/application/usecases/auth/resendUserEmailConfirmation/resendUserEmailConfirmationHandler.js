@@ -7,17 +7,19 @@ import ResendUserEmailConfirmationResponse from './resendUserEmailConfirmationRe
 
 export default class ResendUserEmailConfirmationHandler {
   #userRepository
+  #cacheService
   #emailService
   #jwtService
-  #cacheService
+  #loggerService
 
   constructor({
-    userRepository, emailService, jwtService, cacheService
+    userRepository, cacheService, emailService, jwtService, loggerService
   }) {
     this.#userRepository = userRepository
+    this.#cacheService = cacheService
     this.#emailService = emailService
     this.#jwtService = jwtService
-    this.#cacheService = cacheService
+    this.#loggerService = loggerService
   }
 
   handle = async command => {
@@ -39,6 +41,7 @@ export default class ResendUserEmailConfirmationHandler {
     await this.#cacheService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
+    await this.#loggerService.log('Reenvio de email de confirmação de usuário realizado.')
     return new ResendUserEmailConfirmationResponse(token)
   }
 }

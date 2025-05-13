@@ -1,18 +1,20 @@
 import RedisKeys from '../../../../domain/redisKeys.js'
-import BadRequestException from '../../../../webapi/exceptions/badRequestException.js'
-import NotFoundException from '../../../../webapi/exceptions/notFoundException.js'
+import BadRequestException from '../../../exceptions/badRequestException.js'
+import NotFoundException from '../../../exceptions/notFoundException.js'
 
 export default class ResetUserPasswordHandler {
   #userRepository
   #passwordHasherService
   #cacheService
+  #loggerService
 
   constructor({
-    userRepository, passwordHasherService, cacheService
+    userRepository, cacheService, loggerService, passwordHasherService
   }) {
     this.#userRepository = userRepository
-    this.#passwordHasherService = passwordHasherService
     this.#cacheService = cacheService
+    this.#loggerService = loggerService
+    this.#passwordHasherService = passwordHasherService
   }
 
   handle = async command => {
@@ -20,6 +22,7 @@ export default class ResetUserPasswordHandler {
     const user = await this.#userRepository.getUserByEmail(email)
 
     if (user === null) {
+      await this.#loggerService.logError('Usuário não encontrado.')
       throw new NotFoundException('Usuário não encontrado.')
     }
 
@@ -27,6 +30,7 @@ export default class ResetUserPasswordHandler {
     const cachedCode = await this.#cacheService.getData(key)
 
     if (cachedCode === null || cachedCode !== command.getCode()) {
+      await this.#loggerService.logError('Tentativa inválida de reset de senha de usuário.')
       throw new BadRequestException('Código de reset de senha incorreto/inválido.')
     }
 
@@ -35,5 +39,6 @@ export default class ResetUserPasswordHandler {
 
     await this.#userRepository.updateUser(user)
     await this.#cacheService.deleteData(key)
+    await this.#loggerService.log('Reset de senha realizado para usuário.')
   }
 }

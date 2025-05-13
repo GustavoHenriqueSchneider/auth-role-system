@@ -1,4 +1,4 @@
-import NotFoundException from '../../../../webapi/exceptions/notFoundException.js'
+import NotFoundException from '../../../exceptions/notFoundException.js'
 import GetUserByIdResponse from './getUserByIdResponse.js'
 
 export default class GetUserByIdHandler {

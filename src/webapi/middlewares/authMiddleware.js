@@ -4,9 +4,9 @@ import Roles from '../../domain/auth/roles.js'
 import Steps from '../../domain/auth/steps.js'
 import TokenTypes from '../../domain/auth/tokenTypes.js'
 
-import BadRequestException from '../exceptions/badRequestException.js'
-import ForbiddenException from '../exceptions/forbiddenException.js'
-import UnauthorizedException from '../exceptions/unauthorizedException.js'
+import BadRequestException from '../../application/exceptions/badRequestException.js'
+import ForbiddenException from '../../application/exceptions/forbiddenException.js'
+import UnauthorizedException from '../../application/exceptions/unauthorizedException.js'
 
 export default ({ step, role } = {}) => async (req, res, next) => {
   try {

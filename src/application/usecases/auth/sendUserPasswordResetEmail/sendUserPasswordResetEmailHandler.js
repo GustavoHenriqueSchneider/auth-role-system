@@ -7,17 +7,19 @@ import SendUserPasswordResetEmailResponse from './sendUserPasswordResetEmailResp
 
 export default class SendUserPasswordResetEmailHandler {
   #userRepository
+  #cacheService
   #emailService
   #jwtService
-  #cacheService
+  #loggerService
 
   constructor({
-    userRepository, emailService, jwtService, cacheService
+    userRepository, cacheService, emailService, jwtService, loggerService
   }) {
     this.#userRepository = userRepository
+    this.#cacheService = cacheService
     this.#emailService = emailService
     this.#jwtService = jwtService
-    this.#cacheService = cacheService
+    this.#loggerService = loggerService
   }
 
   handle = async command => {
@@ -35,6 +37,7 @@ export default class SendUserPasswordResetEmailHandler {
     await this.#cacheService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.PASSWORD_RESET, { code })
 
+    await this.#loggerService.log('Reenvio de email de reset de senha realizado.')
     return new SendUserPasswordResetEmailResponse(token)
   }
 }
