@@ -23,8 +23,13 @@ export default class AnonymizeUserByIdHandler {
       throw new BadRequestException(`Não é possível anonimizar um usuário com a role '${Roles.ADMIN}'.`)
     }
 
-    user.setName('Usuário Anônimo')
-    user.setEmail(RandomDataGeneratorService.generateEmail())
+    const anonymousData = {
+      name: process.env.ANONYMOUS_USERNAME,
+      email: RandomDataGeneratorService.generateEmail()
+    }
+
+    user.setName(anonymousData.name)
+    user.setEmail(anonymousData.email)
 
     const newPasswordHash = await this.#passwordHasherService.hash(RandomDataGeneratorService.generatePassword())
     user.setPasswordHash(newPasswordHash)

@@ -1,6 +1,12 @@
 import bcrypt from 'bcrypt'
 
 export default class PasswordHasherService {
+  #loggerService
+  
+  constructor({ loggerService }) {
+    this.#loggerService = loggerService
+  }
+
   static SALT_ROUNDS = 10
 
   hash = async password => {
@@ -9,7 +15,7 @@ export default class PasswordHasherService {
 
     } catch (error) {
 
-      console.error('Erro ao gerar senha criptografada')
+      await this.#loggerService.logError('Erro ao gerar senha criptografada')
       throw error
     }
   }
@@ -20,7 +26,7 @@ export default class PasswordHasherService {
 
     } catch (error) {
 
-      console.error('Erro ao comparar senha crua com criptografada')
+      await this.#loggerService.logError('Erro ao comparar senha crua com criptografada')
       throw error
     }
   }

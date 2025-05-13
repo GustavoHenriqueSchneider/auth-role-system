@@ -5,14 +5,14 @@ import NotFoundException from '../../../../webapi/exceptions/notFoundException.j
 export default class ResetUserPasswordHandler {
   #userRepository
   #passwordHasherService
-  #redisService
+  #cacheService
 
   constructor({
-    userRepository, passwordHasherService, redisService
+    userRepository, passwordHasherService, cacheService
   }) {
     this.#userRepository = userRepository
     this.#passwordHasherService = passwordHasherService
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -24,7 +24,7 @@ export default class ResetUserPasswordHandler {
     }
 
     const key = RedisKeys.formatKey(RedisKeys.RESET_PASSWORD_EMAIL_CODE, { email })
-    const cachedCode = await this.#redisService.getData(key)
+    const cachedCode = await this.#cacheService.getData(key)
 
     if (cachedCode === null || cachedCode !== command.getCode()) {
       throw new BadRequestException('Código de reset de senha incorreto/inválido.')
@@ -34,6 +34,6 @@ export default class ResetUserPasswordHandler {
     user.setPasswordHash(newPasswordHash)
 
     await this.#userRepository.updateUser(user)
-    await this.#redisService.deleteData(key)
+    await this.#cacheService.deleteData(key)
   }
 }

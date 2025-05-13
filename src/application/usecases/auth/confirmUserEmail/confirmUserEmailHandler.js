@@ -4,11 +4,11 @@ import NotFoundException from '../../../../webapi/exceptions/notFoundException.j
 
 export default class ConfirmUserEmailHandler {
   #userRepository
-  #redisService
+  #cacheService
 
-  constructor({ userRepository, redisService }) {
+  constructor({ userRepository, cacheService }) {
     this.#userRepository = userRepository
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -20,7 +20,7 @@ export default class ConfirmUserEmailHandler {
     }
 
     const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_CODE, { email })
-    const cachedCode = await this.#redisService.getData(key)
+    const cachedCode = await this.#cacheService.getData(key)
 
     if (cachedCode === null || cachedCode !== command.getCode()) {
       throw new BadRequestException('Código de confirmação incorreto/inválido.')
@@ -32,6 +32,6 @@ export default class ConfirmUserEmailHandler {
 
     user.verify()
     await this.#userRepository.updateUser(user)
-    await this.#redisService.deleteData(key)
+    await this.#cacheService.deleteData(key)
   }
 }

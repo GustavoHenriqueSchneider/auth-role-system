@@ -1,8 +1,10 @@
-export default class RedisService {
+export default class CacheService {
   #redisClient
+  #loggerService
 
-  constructor({ redisClient }) {
+  constructor({ redisClient, loggerService }) {
     this.#redisClient = redisClient
+    this.#loggerService = loggerService
   }
 
   setData = async (key, value, { expiration = 3600 } = {}) => {
@@ -11,7 +13,7 @@ export default class RedisService {
 
     } catch (error) {
 
-      console.error('Erro ao armazenar dados no Redis')
+      await this.#loggerService.logError('Erro ao armazenar dados no Redis')
       throw error
     }
   }
@@ -23,7 +25,7 @@ export default class RedisService {
 
     } catch (error) {
 
-      console.error('Erro ao buscar dados no Redis')
+      await this.#loggerService.logError('Erro ao buscar dados no Redis')
       return null
     }
   }
@@ -34,7 +36,7 @@ export default class RedisService {
 
     } catch (error) {
 
-      console.error('Erro ao deletar dados no Redis')
+      await this.#loggerService.logError('Erro ao deletar dados no Redis')
       throw error
     }
   }

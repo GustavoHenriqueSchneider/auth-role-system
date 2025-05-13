@@ -1,6 +1,9 @@
 import { createClient } from 'redis'
 
-const redisClient = createClient({ url: process.env.REDIS_URL })
+const redisClient = createClient({
+  url: process.env.REDIS_URL,
+  password: process.env.REDIS_PASSWORD
+})
 
 redisClient.on('error', err => {
   console.error('Erro no Redis:', err)

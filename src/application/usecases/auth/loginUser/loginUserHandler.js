@@ -8,15 +8,15 @@ export default class LoginUserHandler {
   #userRepository
   #jwtService
   #passwordHasherService
-  #redisService
+  #cacheService
 
   constructor({
-    userRepository, jwtService, passwordHasherService, redisService
+    userRepository, jwtService, passwordHasherService, cacheService
   }) {
     this.#userRepository = userRepository
     this.#jwtService = jwtService
     this.#passwordHasherService = passwordHasherService
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -39,7 +39,7 @@ export default class LoginUserHandler {
     }
 
     const userId = user.getId()
-    const accessToken = this.#jwtService.generateAccessToken(new JwtPayload({
+    const accessToken = await this.#jwtService.generateAccessToken(new JwtPayload({
       id: userId,
       name: user.getName(),
       email: user.getEmail(),
@@ -47,8 +47,8 @@ export default class LoginUserHandler {
     }))
 
     const key = RedisKeys.formatKey(RedisKeys.USER_REFRESH_TOKEN, { userId })
-    const refreshToken = this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
-    await this.#redisService.setData(key, refreshToken, { expiration: 604800 })
+    const refreshToken = await this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
+    await this.#cacheService.setData(key, refreshToken, { expiration: 604800 })
 
     return new LoginUserResponse(accessToken, refreshToken)
   }

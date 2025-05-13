@@ -11,7 +11,7 @@ import UserRolesRepository from './repositories/userRolesRepository.js'
 import EmailService from './services/emailService.js'
 import JwtService from './services/jwtService.js'
 import PasswordHasherService from './services/passwordHasherService.js'
-import RedisService from './services/redisService.js'
+import CacheService from './services/cacheService.js'
 
 const registerClients = container => {
   container.register({
@@ -34,7 +34,7 @@ const registerServices = container => {
     emailService: asClass(EmailService).singleton(),
     jwtService: asClass(JwtService).singleton(),
     passwordHasherService: asClass(PasswordHasherService).singleton(),
-    redisService: asClass(RedisService).singleton()
+    cacheService: asClass(CacheService).singleton()
   })
 }
 

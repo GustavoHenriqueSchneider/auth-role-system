@@ -9,21 +9,21 @@ export default class ResendUserEmailConfirmationHandler {
   #userRepository
   #emailService
   #jwtService
-  #redisService
+  #cacheService
 
   constructor({
-    userRepository, emailService, jwtService, redisService
+    userRepository, emailService, jwtService, cacheService
   }) {
     this.#userRepository = userRepository
     this.#emailService = emailService
     this.#jwtService = jwtService
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
     const email = command.getEmail()
     const user = await this.#userRepository.getUserByEmail(email)
-    const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
+    const token = await this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
 
     if (user === null) {
       return new ResendUserEmailConfirmationResponse(token)
@@ -36,7 +36,7 @@ export default class ResendUserEmailConfirmationHandler {
     const code = TokenGeneratorService.generateToken(6)
     const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_CODE, { email })
 
-    await this.#redisService.setData(key, code, { expiration: 900 })
+    await this.#cacheService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
     return new ResendUserEmailConfirmationResponse(token)

@@ -3,11 +3,11 @@ import NotFoundException from '../../../../webapi/exceptions/notFoundException.j
 
 export default class LogoutUserHandler {
   #userRepository
-  #redisService
+  #cacheService
 
-  constructor({ userRepository, redisService }) {
+  constructor({ userRepository, cacheService }) {
     this.#userRepository = userRepository
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -19,6 +19,6 @@ export default class LogoutUserHandler {
     }
 
     const key = RedisKeys.formatKey(RedisKeys.USER_REFRESH_TOKEN, { userId })
-    await this.#redisService.deleteData(key)
+    await this.#cacheService.deleteData(key)
   }
 }

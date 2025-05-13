@@ -9,14 +9,14 @@ import RefreshTokenResponse from './refreshTokenResponse.js'
 export default class RefreshTokenHandler {
   #userRepository
   #jwtService
-  #redisService
+  #cacheService
 
   constructor({
-    userRepository, jwtService, redisService
+    userRepository, jwtService, cacheService
   }) {
     this.#userRepository = userRepository
     this.#jwtService = jwtService
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -24,7 +24,7 @@ export default class RefreshTokenHandler {
     let payload
 
     try {
-      payload = this.#jwtService.verifyToken(refreshToken)
+      payload = await this.#jwtService.verifyToken(refreshToken)
 
     } catch (error) {
 
@@ -45,7 +45,7 @@ export default class RefreshTokenHandler {
 
     const userId = payload.data.userId
     const key = RedisKeys.formatKey(RedisKeys.USER_REFRESH_TOKEN, { userId })
-    const cachedRefreshToken = await this.#redisService.getData(key)
+    const cachedRefreshToken = await this.#cacheService.getData(key)
 
     if (cachedRefreshToken === null || cachedRefreshToken !== refreshToken) {
       throw new BadRequestException('Refresh token incorreto/inválido.')
@@ -61,15 +61,15 @@ export default class RefreshTokenHandler {
       throw new BadRequestException('Esse usuário ainda não teve seu email confirmado.')
     }
 
-    const newAccessToken = this.#jwtService.generateAccessToken(new JwtPayload({
+    const newAccessToken = await this.#jwtService.generateAccessToken(new JwtPayload({
       id: userId,
       name: user.getName(),
       email: user.getEmail(),
       roles: user.getRoles()
     }))
 
-    const newRefreshToken = this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
-    await this.#redisService.setData(key, newRefreshToken, { expiration: 604800 })
+    const newRefreshToken = await this.#jwtService.generateRefreshToken(new JwtPayload({ id: userId }))
+    await this.#cacheService.setData(key, newRefreshToken, { expiration: 604800 })
 
     return new RefreshTokenResponse(newAccessToken, newRefreshToken)
   }

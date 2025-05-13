@@ -5,6 +5,9 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     volumes:
       - redis-data:/data
     networks:
@@ -15,9 +18,9 @@ services:
     container_name: postgres-container
     restart: unless-stopped
     environment:
-      POSTGRES_DB: auth_db
-      POSTGRES_USER: auth_user
-      POSTGRES_PASSWORD: auth_pass
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -25,9 +28,28 @@ services:
     networks:
       - backend
 
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+  container_name: elasticsearch
+  environment:
+    - discovery.type=single-node
+    - xpack.security.enabled=true
+    - ELASTIC_USERNAME=${ELASTICSEARCH_USERNAME}
+    - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    - xpack.security.transport.ssl.enabled=false
+    - xpack.security.http.ssl.enabled=false
+    - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  ports:
+    - "9200:9200"
+  volumes:
+    - esdata:/usr/share/elasticsearch/data
+  networks:
+    - backend
+
 volumes:
   redis-data:
   postgres-data:
+  es-data:
 
 networks:
   backend:

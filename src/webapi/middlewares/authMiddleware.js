@@ -1,3 +1,5 @@
+import sessionNamespace from '../../../namespace.js'
+
 import Roles from '../../domain/auth/roles.js'
 import Steps from '../../domain/auth/steps.js'
 import TokenTypes from '../../domain/auth/tokenTypes.js'
@@ -15,7 +17,7 @@ export default ({ step, role } = {}) => async (req, res, next) => {
       return next(new UnauthorizedException('Token não fornecido.'))
     }
 
-    const payload = req.container
+    const payload = await req.container
       .resolve('jwtService')
       .verifyToken(token)
 
@@ -50,6 +52,10 @@ export default ({ step, role } = {}) => async (req, res, next) => {
         return next(new ForbiddenException('O usuário atual não possui o cargo necessário.'))
       }
     }
+
+    sessionNamespace.run(() => {
+      sessionNamespace.set('userId', payload.data.id)
+    })
 
     req.user = payload.data
     next()

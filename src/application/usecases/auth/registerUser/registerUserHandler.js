@@ -12,16 +12,16 @@ export default class RegisterUserHandler {
   #emailService
   #jwtService
   #passwordHasherService
-  #redisService
+  #cacheService
 
   constructor({
-    userRepository, emailService, jwtService, passwordHasherService, redisService
+    userRepository, emailService, jwtService, passwordHasherService, cacheService
   }) {
     this.#userRepository = userRepository
     this.#emailService = emailService
     this.#jwtService = jwtService
     this.#passwordHasherService = passwordHasherService
-    this.#redisService = redisService
+    this.#cacheService = cacheService
   }
 
   handle = async command => {
@@ -41,10 +41,10 @@ export default class RegisterUserHandler {
     const code = TokenGeneratorService.generateToken(6)
     const key = RedisKeys.formatKey(RedisKeys.EMAIL_VERIFICATION_CODE, { email })
 
-    await this.#redisService.setData(key, code, { expiration: 900 })
+    await this.#cacheService.setData(key, code, { expiration: 900 })
     await this.#emailService.sendEmail(email, EmailTemplate.EMAIL_VERIFICATION, { code })
 
-    const token = this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
+    const token = await this.#jwtService.generateAccessToken(new JwtPayload({ email }), { step: Steps.EMAIL_VERIFICATION })
     return new RegisterUserResponse(token)
   }
 }

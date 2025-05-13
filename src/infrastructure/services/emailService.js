@@ -2,9 +2,11 @@ import EmailTemplate from '../../domain/emailTemplate.js'
 
 export default class EmailService {
   #smtpClient
+  #loggerService
 
-  constructor({ smtpClient }) {
+  constructor({ smtpClient, loggerService }) {
     this.#smtpClient = smtpClient
+    this.#loggerService = loggerService
   }
 
   sendEmail = async (emailAddress, templateType, params = {}) => {
@@ -20,7 +22,7 @@ export default class EmailService {
       })
     } catch (error) {
 
-      console.error(`Erro ao enviar o email do tipo ${templateType} para '${emailAddress}'`)
+      await this.#loggerService.logError(`Erro ao enviar o email do tipo ${templateType}`)
       throw error
     }
   }

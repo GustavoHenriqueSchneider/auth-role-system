@@ -3,12 +3,14 @@ import TokenTypes from '../../domain/auth/tokenTypes.js'
 
 export default class JwtService {
   #secret
+  #loggerService
 
-  constructor() {
+  constructor({ loggerService }) {
     this.#secret = process.env.JWT_SECRET
+    this.#loggerService = loggerService
   }
 
-  generateAccessToken = (payload, { step } = {}) => {
+  generateAccessToken = async (payload, { step } = {}) => {
     try {
       return jwt.sign({
         data: payload, tokenType: TokenTypes.ACCESS, step
@@ -16,29 +18,29 @@ export default class JwtService {
 
     } catch (error) {
 
-      console.error(`Erro ao gerar token JWT do tipo '${TokenTypes.ACCESS}'`)
+      await this.#loggerService.logError(`Erro ao gerar token JWT do tipo '${TokenTypes.ACCESS}'`)
       throw error
     }
   }
 
-  generateRefreshToken = payload => {
+  generateRefreshToken = async payload => {
     try {
       return jwt.sign({ data: payload, tokenType: TokenTypes.REFRESH }, this.#secret, { expiresIn: '7d' })
 
     } catch (error) {
 
-      console.error(`Erro ao gerar token JWT do tipo '${TokenTypes.REFRESH}'`)
+      await this.#loggerService.logError(`Erro ao gerar token JWT do tipo '${TokenTypes.REFRESH}'`)
       throw error
     }
   }
 
-  verifyToken = token => {
+  verifyToken = async token => {
     try {
       return jwt.verify(token, this.#secret)
 
     } catch (error) {
 
-      console.error('Erro ao validar token JWT')
+      await this.#loggerService.logError('Erro ao validar token JWT')
       throw error
     }
   }

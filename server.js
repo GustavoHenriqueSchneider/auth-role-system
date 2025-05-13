@@ -7,6 +7,7 @@ import { config } from 'dotenv'
 import { setupDependencies, container } from './dependencyInjection.js'
 
 import errorHandlerMiddleware from './src/webapi/middlewares/errorHandlerMiddleware.js'
+import sessionMiddleware from './src/webapi/middlewares/sessionMiddleware.js'
 
 import authController from './src/webapi/controllers/authController.js'
 import roleController from './src/webapi/controllers/roleController.js'
@@ -18,6 +19,8 @@ setupDependencies()
 const app = express()
 app.use(express.json())
 app.use(scopePerRequest(container))
+
+app.use(sessionMiddleware)
 
 const applicationUrl = `http://localhost:${process.env.APPLICATION_PORT}`
 const documentationRoute = '/docs'
